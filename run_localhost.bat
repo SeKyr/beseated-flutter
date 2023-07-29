@@ -1,0 +1,1 @@
+flutter run --dart-define=BESEATED_API_URL=http://192.168.1.100:5001/BeSeated/api

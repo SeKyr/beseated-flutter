@@ -1,0 +1,6 @@
+package com.software.beseated
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

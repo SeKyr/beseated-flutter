@@ -1,0 +1,12 @@
+{
+  "location": "Location",
+  "logout": "Logout",
+  "microsoftLogin": "Login with Microsoft",
+  "welcome": "Welcome",
+  "to": "to",
+  "reservationSuccessToast": "Reservation successful",
+  "reservationChangeSuccessToast": "Reservation successfully changed",
+  "reservationDeletionSuccessToast": "Reservation successfully deleted",
+  "errorToast": "Something went wrong",
+  "settings": "Settings"
+}
