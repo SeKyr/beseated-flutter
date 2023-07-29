@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_screen_controller.dart';
+part of 'is_connected.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -29,21 +29,19 @@ class _SystemHash {
   }
 }
 
-String _$LoginScreenControllerHash() =>
-    r'd8488ccae4b2f26be5a90f41df6035b023879df9';
+String _$IsConnectedHash() => r'2913373947d8eac003e3468747598ba1b295a369';
 
-/// See also [LoginScreenController].
-final loginScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider<LoginScreenController, bool>(
-  LoginScreenController.new,
-  name: r'loginScreenControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$LoginScreenControllerHash,
+/// See also [IsConnected].
+final isConnectedProvider =
+    AsyncNotifierProvider<IsConnected, ConnectivityState>(
+  IsConnected.new,
+  name: r'isConnectedProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$IsConnectedHash,
 );
-typedef LoginScreenControllerRef = AutoDisposeAsyncNotifierProviderRef<bool>;
+typedef IsConnectedRef = AsyncNotifierProviderRef<ConnectivityState>;
 
-abstract class _$LoginScreenController extends AutoDisposeAsyncNotifier<bool> {
+abstract class _$IsConnected extends AsyncNotifier<ConnectivityState> {
   @override
-  FutureOr<bool> build();
+  FutureOr<ConnectivityState> build();
 }

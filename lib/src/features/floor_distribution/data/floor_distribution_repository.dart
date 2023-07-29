@@ -1,6 +1,6 @@
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/shared/app_utils.dart';
-import 'package:beseated/src/shared/beseated_secured_http_client.dart';
+import 'package:beseated/src/shared/internet/beseated_secured_http_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'floor_distribution_repository.g.dart';
 

@@ -14,19 +14,21 @@ class LoginScreenController extends _$LoginScreenController {
   FutureOr<bool> build() async {
     var shouldTrySilentLogin = await ref.watch(authServiceProvider).shouldTrySilentLogin();
     if(shouldTrySilentLogin) {
-      await loginAndRedirectOnSuccess();
-      return false;
+      var logInSucess = await loginAndRedirectOnSuccess();
+      return !logInSucess;
     }
     return true;
   }
 
-  Future<void> loginAndRedirectOnSuccess() async {
+  Future<bool> loginAndRedirectOnSuccess() async {
     state = const AsyncLoading();
-    var result = await  _loginAndLoadUserDetails();
+    var result = await _loginAndLoadUserDetails();
     if(result) {
       navigatorKey.currentContext!.go('/reservation');
+      return false;
     } else {
       state = const AsyncData(true);
+      return true;
     }
   }
 

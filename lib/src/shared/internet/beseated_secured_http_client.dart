@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
-import '../features/authentication/data/auth_storage.dart';
-import 'app_utils.dart';
+import '../../features/authentication/data/auth_storage.dart';
+import '../app_utils.dart';
 
 class BeSeatedSecuredHttpClient{
   final String _baseUrl = AppUtils.beSeatedApiUrl;

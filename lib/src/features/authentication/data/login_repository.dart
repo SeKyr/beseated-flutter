@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:beseated/src/shared/app_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../shared/beseated_secured_http_client.dart';
+import '../../../shared/internet/beseated_secured_http_client.dart';
 
 part 'login_repository.g.dart';
 

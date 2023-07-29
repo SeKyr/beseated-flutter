@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:beseated/src/features/authentication/domain/user.dart';
 import 'package:beseated/src/shared/app_utils.dart';
-import 'package:beseated/src/shared/microsoft_secured_http_client.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../shared/internet/microsoft_secured_http_client.dart';
 
 
 part 'microsoft_graph_repository.g.dart';

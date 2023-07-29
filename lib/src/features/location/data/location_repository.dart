@@ -2,7 +2,7 @@ import 'package:beseated/src/features/location/domain/location.dart';
 import 'package:beseated/src/shared/app_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../shared/beseated_secured_http_client.dart';
+import '../../../shared/internet/beseated_secured_http_client.dart';
 
 part 'location_repository.g.dart';
 

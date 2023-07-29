@@ -8,5 +8,6 @@
   "reservationChangeSuccessToast": "Reservierung erfolgreich geändert",
   "reservationDeletionSuccessToast": "Reservierung erfolgreich gelöscht",
   "errorToast": "Etwas ist schiefgelaufen",
-  "settings": "Einstellungen"
+  "settings": "Einstellungen",
+  "offlineMode": "Du bist offline!"
 }

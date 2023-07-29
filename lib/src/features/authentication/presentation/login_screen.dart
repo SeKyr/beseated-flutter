@@ -12,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../shared/ui/notifiable_loading_overlay_view.dart';
 
 class LoginScreen extends ConsumerWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +49,7 @@ class LoginScreen extends ConsumerWidget {
   }
 
   Widget _welcomeSign(double heightPerSizedBox, double widthPerSizedBox) {
-    var textstyle = GoogleFonts.lobsterTwo(
+    var textStyle = GoogleFonts.lobsterTwo(
         textStyle:
             Theme.of(navigatorKey.currentContext!).textTheme.headlineMedium);
     return LayoutBuilder(
@@ -64,7 +64,7 @@ class LoginScreen extends ConsumerWidget {
                   width: widthPerSizedBox,
                   height: heightPerSizedBox,
                   child: Center(
-                    child: Text(localTexts.welcome, style: textstyle),
+                    child: Text(localTexts.welcome, style: textStyle),
                   ),
                 ),
                 SizedBox(
@@ -80,7 +80,7 @@ class LoginScreen extends ConsumerWidget {
                 SizedBox(
                   width: widthPerSizedBox,
                   height: heightPerSizedBox,
-                  child: Center(child: Text(localTexts.to, style: textstyle)),
+                  child: Center(child: Text(localTexts.to, style: textStyle)),
                 )
               ],
             ),

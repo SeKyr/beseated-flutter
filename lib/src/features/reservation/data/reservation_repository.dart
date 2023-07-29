@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/app_utils.dart';
-import '../../../shared/beseated_secured_http_client.dart';
+import '../../../shared/internet/beseated_secured_http_client.dart';
 import '../domain/reservation.dart';
 
 part 'reservation_repository.g.dart';

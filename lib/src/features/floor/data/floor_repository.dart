@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/app_utils.dart';
-import '../../../shared/beseated_secured_http_client.dart';
+import '../../../shared/internet/beseated_secured_http_client.dart';
 
 part 'floor_repository.g.dart';
 
