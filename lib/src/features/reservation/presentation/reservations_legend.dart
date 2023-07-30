@@ -1,5 +1,6 @@
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/features/floor_distribution/presentation/floor_distribution_ui.dart';
+import 'package:beseated/src/features/reservation_request/domain/reservation_request.dart';
 import 'package:beseated/src/shared/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
@@ -78,6 +79,7 @@ class ReservationsLegend extends StatelessWidget {
         roomId: 1,
         startdate: DateTime.now(),
         enddate: DateTime.now());
+    var reservationRequest = ReservationRequest(email: "max.mustermann@company.domain", roomId: 1, startdate: DateTime.now(), enddate: DateTime.now());
     List<FloorDistributionLegendEntry> list = List.empty(growable: true);
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution.copyWith(reservable: false),
@@ -97,6 +99,11 @@ class ReservationsLegend extends StatelessWidget {
         reservation: reservation,
         userEmail: "max.mustermann@company.domain",
         description: localTexts.selfReserved));
+    list.add(FloorDistributionLegendEntry(
+        floorDistribution: floorDistribution,
+        reservationRequest: reservationRequest,
+        userEmail: "max.mustermann@company.domain",
+        description: localTexts.requested));
     return list;
   }
 
@@ -109,6 +116,7 @@ class ReservationsLegend extends StatelessWidget {
             selected: false,
             loggedInUserEmail: entry.userEmail,
             reservation: entry.reservation,
+            reservationRequest: entry.reservationRequest,
           ),
           SizedBox(
               width: entry.floorDistribution.width.toDouble(),
@@ -124,7 +132,7 @@ class ReservationsLegend extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           leading,
-          SizedBox(width: 4,),
+          const SizedBox(width: 4,),
           title
         ],
       ),
@@ -136,11 +144,13 @@ class FloorDistributionLegendEntry {
   FloorDistributionLegendEntry(
       {required this.floorDistribution,
       this.reservation,
+      this.reservationRequest,
       required this.userEmail,
       required this.description});
 
   FloorDistribution floorDistribution;
   Reservation? reservation;
+  ReservationRequest? reservationRequest;
   String userEmail;
   String description;
 }

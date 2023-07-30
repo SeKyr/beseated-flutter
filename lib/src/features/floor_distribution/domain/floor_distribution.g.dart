@@ -21,6 +21,7 @@ _$_FloorDistribution _$$_FloorDistributionFromJson(Map<String, dynamic> json) =>
       x: json['x'] as int,
       y: json['y'] as int,
       z: json['z'] as int,
+      owner: json['owner'] as String?,
     );
 
 Map<String, dynamic> _$$_FloorDistributionToJson(
@@ -38,6 +39,7 @@ Map<String, dynamic> _$$_FloorDistributionToJson(
       'x': instance.x,
       'y': instance.y,
       'z': instance.z,
+      'owner': instance.owner,
     };
 
 const _$FloorDistributionTypeEnumMap = {

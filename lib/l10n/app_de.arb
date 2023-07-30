@@ -7,6 +7,8 @@
   "reservationSuccessToast": "Reservierung erfolgreich",
   "reservationChangeSuccessToast": "Reservierung erfolgreich geändert",
   "reservationDeletionSuccessToast": "Reservierung erfolgreich gelöscht",
+  "reservationRequestSuccessToast": "Reservierungsanfrage erfolgreich",
+  "reservationRequestCancelationSuccessToast": "Reservierungsanfrage erfolgreich gelöscht",
   "errorToast": "Etwas ist schiefgelaufen",
   "settings": "Einstellungen",
   "offlineMode": "Du bist offline!",
@@ -15,5 +17,12 @@
   "reserved": "Gebucht",
   "selfReserved": "Deine Buchung",
   "requested": "Angefragt",
-  "quickAction": "Schnelle Aktion"
+  "quickAction": "Schnelle Aktion",
+  "pleaseConfirm": "Bitte bestätigen",
+  "confirmReservationRequestDeletsOwnReservationDescription": "Dieser {floorDistributionType} kann nicht direkt reserviert werden. Deine vorhandene {floorDistributionType}-Reservierung wird gelöscht. Möchtest du ihn trotzdem anfragen?",
+  "confirmReservationRequestDescription": "Dieser {floorDistributionType} kann nicht direkt reserviert werden. Möchtest du ihn anfragen?",
+  "yesLarge": "Ja",
+  "noLarge": "Nein",
+  "workingDesk": "Arbeitsplatz",
+  "parkingLot": "Parkplatz"
 }

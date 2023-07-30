@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../reservation/domain/reservation.dart';
+import '../../reservation_request/domain/reservation_request.dart';
 
 class FloorDistributionUI extends ConsumerWidget {
   const FloorDistributionUI(
@@ -12,6 +13,7 @@ class FloorDistributionUI extends ConsumerWidget {
         required this.selected,
         required this.loggedInUserEmail,
         this.reservation,
+        this.reservationRequest,
         this.onDoubleTap,
         this.onTap
       });
@@ -21,6 +23,8 @@ class FloorDistributionUI extends ConsumerWidget {
   final bool selected;
 
   final Reservation? reservation;
+
+  final ReservationRequest? reservationRequest;
 
   final String loggedInUserEmail;
 
@@ -55,10 +59,12 @@ class FloorDistributionUI extends ConsumerWidget {
       if (reservation != null) {
         bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
         if(isOwnReservation) {
-          return selected ? Theme.of(context).colorScheme.secondary.withOpacity(0.5)  : Theme.of(context).colorScheme.secondary;
+          return selected ? Theme.of(context).colorScheme.secondary.withOpacity(0.5) : Theme.of(context).colorScheme.secondary;
         } else {
-          return selected ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)  : Theme.of(context).colorScheme.primaryContainer;
+          return selected ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5) : Theme.of(context).colorScheme.primaryContainer;
         }
+      } else if (reservationRequest != null) {
+        return selected ? Theme.of(context).colorScheme.tertiary.withOpacity(0.5) : Theme.of(context).colorScheme.tertiary;
       } else {
         return selected ? Theme.of(context).colorScheme.primary.withOpacity(0.5) : Theme.of(context).colorScheme.primary;
       }
@@ -81,15 +87,24 @@ class FloorDistributionUI extends ConsumerWidget {
               ),
             ))
       ]);
-    } else if (reservation != null) {
-      bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
+    } else if (reservation != null || reservationRequest != null) {
+      Color backgroundColor;
+      Color textColor;
+      if (reservation != null) {
+        bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
+        backgroundColor = isOwnReservation ? Theme.of(context).colorScheme.onSecondary : Theme.of(context).colorScheme.onPrimaryContainer;
+        textColor = isOwnReservation ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primaryContainer;
+      } else {
+        backgroundColor = Theme.of(context).colorScheme.onTertiary;
+        textColor = Theme.of(context).colorScheme.tertiary;
+      }
       return CircleAvatar(
-        backgroundColor: isOwnReservation ? Theme.of(context).colorScheme.onSecondary : Theme.of(context).colorScheme.onPrimaryContainer, //const Color.fromRGBO(27, 121, 31, 100)
+        backgroundColor: backgroundColor, //const Color.fromRGBO(27, 121, 31, 100)
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            reservation!.initials,
-            style: TextStyle(fontSize: 10, color: isOwnReservation ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primaryContainer),
+            reservation?.initials ?? reservationRequest!.initials,
+            style: TextStyle(fontSize: 10, color: textColor),
           ),
         ),
       );

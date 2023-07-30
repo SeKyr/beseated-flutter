@@ -33,6 +33,7 @@ mixin _$FloorDistribution {
   int get x => throw _privateConstructorUsedError;
   int get y => throw _privateConstructorUsedError;
   int get z => throw _privateConstructorUsedError;
+  String? get owner => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +59,8 @@ abstract class $FloorDistributionCopyWith<$Res> {
       int height,
       int x,
       int y,
-      int z});
+      int z,
+      String? owner});
 }
 
 /// @nodoc
@@ -86,6 +88,7 @@ class _$FloorDistributionCopyWithImpl<$Res, $Val extends FloorDistribution>
     Object? x = null,
     Object? y = null,
     Object? z = null,
+    Object? owner = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -136,6 +139,10 @@ class _$FloorDistributionCopyWithImpl<$Res, $Val extends FloorDistribution>
           ? _value.z
           : z // ignore: cast_nullable_to_non_nullable
               as int,
+      owner: freezed == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -160,7 +167,8 @@ abstract class _$$_FloorDistributionCopyWith<$Res>
       int height,
       int x,
       int y,
-      int z});
+      int z,
+      String? owner});
 }
 
 /// @nodoc
@@ -186,6 +194,7 @@ class __$$_FloorDistributionCopyWithImpl<$Res>
     Object? x = null,
     Object? y = null,
     Object? z = null,
+    Object? owner = freezed,
   }) {
     return _then(_$_FloorDistribution(
       id: null == id
@@ -236,6 +245,10 @@ class __$$_FloorDistributionCopyWithImpl<$Res>
           ? _value.z
           : z // ignore: cast_nullable_to_non_nullable
               as int,
+      owner: freezed == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -255,7 +268,8 @@ class _$_FloorDistribution implements _FloorDistribution {
       required this.height,
       required this.x,
       required this.y,
-      required this.z});
+      required this.z,
+      this.owner});
 
   factory _$_FloorDistribution.fromJson(Map<String, dynamic> json) =>
       _$$_FloorDistributionFromJson(json);
@@ -285,10 +299,12 @@ class _$_FloorDistribution implements _FloorDistribution {
   final int y;
   @override
   final int z;
+  @override
+  final String? owner;
 
   @override
   String toString() {
-    return 'FloorDistribution(id: $id, name: $name, reservable: $reservable, floorId: $floorId, shape: $shape, notification: $notification, type: $type, width: $width, height: $height, x: $x, y: $y, z: $z)';
+    return 'FloorDistribution(id: $id, name: $name, reservable: $reservable, floorId: $floorId, shape: $shape, notification: $notification, type: $type, width: $width, height: $height, x: $x, y: $y, z: $z, owner: $owner)';
   }
 
   @override
@@ -309,13 +325,14 @@ class _$_FloorDistribution implements _FloorDistribution {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.x, x) || other.x == x) &&
             (identical(other.y, y) || other.y == y) &&
-            (identical(other.z, z) || other.z == z));
+            (identical(other.z, z) || other.z == z) &&
+            (identical(other.owner, owner) || other.owner == owner));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, reservable, floorId,
-      shape, notification, type, width, height, x, y, z);
+      shape, notification, type, width, height, x, y, z, owner);
 
   @JsonKey(ignore: true)
   @override
@@ -345,7 +362,8 @@ abstract class _FloorDistribution implements FloorDistribution {
       required final int height,
       required final int x,
       required final int y,
-      required final int z}) = _$_FloorDistribution;
+      required final int z,
+      final String? owner}) = _$_FloorDistribution;
 
   factory _FloorDistribution.fromJson(Map<String, dynamic> json) =
       _$_FloorDistribution.fromJson;
@@ -375,6 +393,8 @@ abstract class _FloorDistribution implements FloorDistribution {
   int get y;
   @override
   int get z;
+  @override
+  String? get owner;
   @override
   @JsonKey(ignore: true)
   _$$_FloorDistributionCopyWith<_$_FloorDistribution> get copyWith =>

@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../reservation/domain/reservation.dart';
+import '../../reservation_request/domain/reservation_request.dart';
 import '../domain/floor_distribution.dart';
 
 class ProvidableFloorDistributionUI extends ConsumerWidget {
@@ -12,6 +13,7 @@ class ProvidableFloorDistributionUI extends ConsumerWidget {
     required this.floorDistribution,
     required this.selectedProvider,
     required this.reservationProvider,
+    required this.reservationRequestProvider,
     required this.loggedInUserProvider,
     this.onTap,
     this.onDoubleTap
@@ -22,6 +24,8 @@ class ProvidableFloorDistributionUI extends ConsumerWidget {
   final ProviderListenable<bool> selectedProvider;
 
   final ProviderListenable<Reservation?> reservationProvider;
+
+  final ProviderListenable<ReservationRequest?> reservationRequestProvider;
 
   final ProviderListenable<User?> loggedInUserProvider;
 
@@ -35,11 +39,13 @@ class ProvidableFloorDistributionUI extends ConsumerWidget {
     ref.watch(selectedProvider);
     final reservation =
     ref.watch(reservationProvider);
+    final reservationRequest = ref.watch(reservationRequestProvider);
     final loggedInUser = ref.read(loggedInUserProvider)!;
     return FloorDistributionUI(floorDistribution: floorDistribution,
       selected: selected,
       loggedInUserEmail: loggedInUser.email,
       reservation: reservation,
+      reservationRequest: reservationRequest,
       onTap: onTap,
       onDoubleTap: onDoubleTap,
     );

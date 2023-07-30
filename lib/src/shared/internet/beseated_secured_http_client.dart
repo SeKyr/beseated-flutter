@@ -48,10 +48,14 @@ class BeSeatedSecuredHttpClient{
 
   void handleError(http.Response response) {
     if(response.statusCode == 401) {
-      navigatorKey.currentContext!.go('/login');
+      _logoutAndRedirect();
     } else if(response.statusCode != 200) {
       throw HttpException(response.statusCode.toString());
     }
+  }
+
+  void _logoutAndRedirect() {
+    authStorage.clearToken().then((value) => AppUtils.azureClient.logout().then((value) => navigatorKey.currentContext!.go('/login')));
   }
 
   Future<String?> get _bearerToken async {

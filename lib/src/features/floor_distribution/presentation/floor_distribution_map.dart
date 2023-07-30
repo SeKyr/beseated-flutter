@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:beseated/src/features/floor_distribution/presentation/floor_distribution_ui.dart';
+import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,6 +71,7 @@ class FloorDistributionMap extends ConsumerWidget {
             floorDistribution: floorDistribution,
             selectedProvider: floorDistributionSelectedProvider(floorDistribution.id),
             reservationProvider: reservationByFloorDistributionProvider(floorDistribution.id),
+            reservationRequestProvider: reservationRequestByFloorDistributionProvider(floorDistribution.id),
             loggedInUserProvider: loggedInUserProvider,
             onTap: floorDistribution.reservable ? () => onReservableChildTap?.call(floorDistribution) : null,
             onDoubleTap: floorDistribution.reservable

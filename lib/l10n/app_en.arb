@@ -7,6 +7,8 @@
   "reservationSuccessToast": "Reservation successful",
   "reservationChangeSuccessToast": "Reservation successfully changed",
   "reservationDeletionSuccessToast": "Reservation successfully deleted",
+  "reservationRequestSuccessToast": "Reservation-Request successful",
+  "reservationRequestCancelationSuccessToast": "Reservation-Request successfully deleted",
   "errorToast": "Something went wrong",
   "settings": "Settings",
   "offlineMode": "You are offline!",
@@ -15,5 +17,28 @@
   "reserved": "Reserved",
   "selfReserved": "Your Reservation",
   "requested": "Requested",
-  "quickAction": "Quick Action"
+  "quickAction": "Quick Action",
+  "pleaseConfirm": "Please confirm",
+  "confirmReservationRequestDeletsOwnReservationDescription": "This {floorDistributionType} can not be directly reserved. Your existing {floorDistributionType} reservation will be deleted. Do you still want to request it?",
+  "@confirmReservationRequestDeletsOwnReservationDescription": {
+    "placeholders": {
+      "floorDistributionType": {
+        "type": "String",
+        "example": "parking lot"
+      }
+    }
+  },
+  "confirmReservationRequestDescription": "This {floorDistributionType} can not be directly reserved. Do you want to request it?",
+  "@confirmReservationRequestDescription": {
+    "placeholders": {
+      "floorDistributionType": {
+        "type": "String",
+        "example": "parking lot"
+      }
+    }
+  },
+  "yesLarge": "Yes",
+  "noLarge": "No",
+  "workingDesk": "working desk",
+  "parkingLot": "parking lot"
 }

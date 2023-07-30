@@ -19,7 +19,7 @@ class ReservationRequestService {
     return reservationRequestRepository.getAssignedReservationRequests();
   }
 
-  Future postReservationRequest({required ReservationRequest reservationRequest}) {
+  Future<ReservationRequest> postReservationRequest({required ReservationRequest reservationRequest}) {
     return reservationRequestRepository.postReservationRequest(reservationRequest: reservationRequest);
   }
 
@@ -32,7 +32,7 @@ class ReservationRequestService {
   }
 
   Future cancelReservationRequest({required int floorDistributionId, required DateTime date}) {
-    return cancelReservationRequest(floorDistributionId: floorDistributionId, date: date);
+    return reservationRequestRepository.cancelReservationRequest(floorDistributionId: floorDistributionId, date: date);
   }
 }
 @riverpod

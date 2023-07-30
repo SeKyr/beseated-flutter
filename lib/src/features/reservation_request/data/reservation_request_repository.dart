@@ -27,8 +27,10 @@ class ReservationRequestRepository {
     return data.map((f) => ReservationRequest.fromJson(f)).toList();
   }
   
-  Future postReservationRequest({required ReservationRequest reservationRequest}) {
-    return client.post('$_baseEndpointUrl/insert', body: reservationRequest.toJson(), bodyIsJson: true);
+  Future<ReservationRequest> postReservationRequest({required ReservationRequest reservationRequest}) async {
+    final response = await client.post(_baseEndpointUrl, body: reservationRequest.toJson(), bodyIsJson: true);
+    final data = AppUtils.decodeJson(response.body);
+    return ReservationRequest.fromJson(data);
   }
 
   Future rejectReservationRequest({required int id}) {

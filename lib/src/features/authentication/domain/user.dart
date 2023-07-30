@@ -5,7 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user.freezed.dart';
 
 @freezed
-class User with _$User{
+class User with _$User {
+  const User._();
+
   factory User({
     required String surname,
     required String firstName,
@@ -16,5 +18,15 @@ class User with _$User{
     FloorDistribution? workingPlace,
     Reservation? parkingLotReservation,
     FloorDistribution? parkingLot,
-}) = _User;
+  }) = _User;
+
+  Reservation? getReservationByFloorDistributionType(
+      FloorDistributionType type) {
+    if (type == FloorDistributionType.table) {
+      return workingPlaceReservation;
+    } else if (type == FloorDistributionType.parkingLot) {
+      return parkingLotReservation;
+    }
+    return null;
+  }
 }

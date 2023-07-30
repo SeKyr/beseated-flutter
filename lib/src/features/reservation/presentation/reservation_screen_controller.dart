@@ -2,7 +2,10 @@ import 'package:beseated/src/features/floor_distribution/application/floor_distr
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/features/location/presentation/selected_location.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_by_floor_distibution.dart';
+import 'package:beseated/src/features/reservation/presentation/reservation_process_state.dart';
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
+import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
+import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +13,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/app_utils.dart';
+import '../../authentication/domain/user.dart';
 import '../../authentication/presentation/logged_in_user.dart';
 import '../../floor/presentation/selected_floor.dart';
+import '../../reservation_request/domain/reservation_request.dart';
 import '../application/reservation_service.dart';
 import '../domain/reservation.dart';
 
@@ -31,10 +36,11 @@ final reservationScreenTitleProvider = AutoDisposeStateProvider<String>((ref) {
 
 @riverpod
 class ReservationScreenController extends _$ReservationScreenController {
-  final Set<int> previouslyFilledProviders = {};
+  final Set<int> previouslyFilledReservationProviders = {};
+  final Set<int> previouslyFilledReservationRequestProviders = {};
 
   bool floorDistsLoaded = false;
-  bool reservationsLoaded = false;
+  bool reservationsAndRequestsLoaded = false;
 
   Location? location;
 
@@ -45,7 +51,7 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   void _initalizeListeners() {
-    _getReservationsOnDateChange();
+    _getReservationsAndRequestsOnDateChange();
     _getFloorDistributionsOnFloorChange();
     _updateLocationOnChange();
   }
@@ -71,15 +77,16 @@ class ReservationScreenController extends _$ReservationScreenController {
     });
   }
 
-  void _getReservationsOnDateChange() {
-    _getReservationsAndFillProvider(ref.read(selectedDateProvider));
+  void _getReservationsAndRequestsOnDateChange() {
+    var selectedDate = ref.read(selectedDateProvider);
+    _getReservationsAndRequestsAndFillProvider(selectedDate);
     ref.listen(selectedDateProvider, (previous, next) async {
-      await _getReservationsAndFillProvider(next);
+      await _getReservationsAndRequestsAndFillProvider(next);
     });
   }
 
   void _changeReservationsLoaded(bool value) {
-    reservationsLoaded = value;
+    reservationsAndRequestsLoaded = value;
     _updateState();
   }
 
@@ -89,7 +96,7 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   void _updateState() {
-    if (reservationsLoaded && floorDistsLoaded) {
+    if (reservationsAndRequestsLoaded && floorDistsLoaded) {
       state = const AsyncData(true);
     } else {
       state = const AsyncLoading();
@@ -106,28 +113,59 @@ class ReservationScreenController extends _$ReservationScreenController {
     });
   }
 
-  Future _getReservationsAndFillProvider(DateTime date) async {
+  Future _getReservationsAndRequestsAndFillProvider(DateTime date) async {
     _changeReservationsLoaded(false);
-    final data = await ref
+    final reservations = await ref
         .read(reservationServiceProvider)
         .getReservationsByDate(date: date);
-    await _fillProviders(data);
+    final requests = await ref
+        .read(reservationRequestServiceProvider)
+        .getOwnReservationRequestsByDate(date: date);
+    await _fillProviders(reservations, requests);
     _changeReservationsLoaded(true);
   }
 
-  Future<void> _fillProviders(List<Reservation> reservations) async {
+  Future<void> _fillProviders(
+      List<Reservation> reservations, List<ReservationRequest> requests) async {
     for (var reservation in reservations) {
       ref
           .read(reservationByFloorDistributionProvider(reservation.roomId)
               .notifier)
           .change(reservation);
     }
-    _clearProviders(reservations.map((r) => r.roomId).toSet());
+
+    _clearReservationProviders(reservations.map((r) => r.roomId).toSet());
     await _fillOwnReservations(reservations
         .where((reservation) =>
             reservation.email.toLowerCase() ==
             ref.read(loggedInUserProvider)!.email.toLowerCase())
         .toList());
+
+    for (var request in requests) {
+      ref
+          .read(reservationRequestByFloorDistributionProvider(request.roomId)
+              .notifier)
+          .change(request);
+    }
+    _clearReservationRequestProviders(requests.map((r) => r.roomId).toSet());
+  }
+
+  Future<void>
+      _clearReservationRequestProviderAfterReservationOfFloorDistribution(
+          FloorDistribution reservedFloorDistribution) async {
+    for (var requestedFloorDistirbutionId
+        in previouslyFilledReservationRequestProviders) {
+      var floorDistribution = await ref
+          .read(floorDistributionServiceProvider)
+          .getFloorDistributionById(id: requestedFloorDistirbutionId);
+      if (reservedFloorDistribution.type == floorDistribution.type) {
+        ref
+            .read(reservationRequestByFloorDistributionProvider(
+                    requestedFloorDistirbutionId)
+                .notifier)
+            .change(null);
+      }
+    }
   }
 
   Future<void> _fillOwnReservations(List<Reservation> ownReservations) async {
@@ -144,14 +182,29 @@ class ReservationScreenController extends _$ReservationScreenController {
     }
   }
 
-  void _clearProviders(Set<int> reservationRoomIds) {
-    previouslyFilledProviders.difference(reservationRoomIds).forEach((id) {
+  void _clearReservationRequestProviders(
+      Set<int> requestedFloorDistributionIds) {
+    previouslyFilledReservationRequestProviders
+        .difference(requestedFloorDistributionIds)
+        .forEach((id) {
+      ref
+          .read(reservationRequestByFloorDistributionProvider(id).notifier)
+          .change(null);
+    });
+    previouslyFilledReservationRequestProviders.clear();
+    previouslyFilledReservationRequestProviders.addAll(requestedFloorDistributionIds);
+  }
+
+  void _clearReservationProviders(Set<int> reservedFloorDistributionIds) {
+    previouslyFilledReservationProviders
+        .difference(reservedFloorDistributionIds)
+        .forEach((id) {
       ref
           .read(reservationByFloorDistributionProvider(id).notifier)
           .change(null);
     });
-    previouslyFilledProviders.clear();
-    previouslyFilledProviders.addAll(reservationRoomIds);
+    previouslyFilledReservationProviders.clear();
+    previouslyFilledReservationProviders.addAll(reservedFloorDistributionIds);
     ref
         .read(loggedInUserProvider.notifier)
         .changeReservationAndFloorDistributionByType(
@@ -166,36 +219,74 @@ class ReservationScreenController extends _$ReservationScreenController {
       FloorDistribution floorDistribution) async {
     final reservation =
         ref.read(reservationByFloorDistributionProvider(floorDistribution.id));
-    if (reservation == null) {
-      var userReservationByFloorDistributionType =
-          getUserReservationByFloorDistributionType(floorDistribution.type);
-      if (userReservationByFloorDistributionType == null) {
-        reserveFloorDistribution(floorDistribution);
-      } else {
+    final reservationRequest = ref.read(
+        reservationRequestByFloorDistributionProvider(floorDistribution.id));
+    var user = ref.read(loggedInUserProvider);
+    var reservationProcessState = ReservationProcessState.evaluateState(
+        floorDistribution: floorDistribution,
+        reservation: reservation,
+        request: reservationRequest,
+        user: user!);
+    switch (reservationProcessState) {
+      case ReservationProcessState.reservable:
+        reserveFloorDistribution(floorDistribution: floorDistribution);
+        break;
+      case ReservationProcessState.requestable:
+        var content = localTexts.confirmReservationRequestDescription(
+            floorDistribution.type.getLocalizedName(localTexts));
+        _showConfirmDialog(
+            content,
+            () =>
+                requestFloorDistribution(floorDistribution: floorDistribution));
+        break;
+      case ReservationProcessState.foreignReservation:
+        break;
+      case ReservationProcessState.ownReservation:
+        deleteReservation(reservation!, floorDistribution);
+        break;
+      case ReservationProcessState.ownReservationRequest:
+        cancelReservationRequest(reservationRequest!);
+        break;
+      case ReservationProcessState.reservableButOwnReservationOnAnother:
         updateReservationFloorDistribution(
-            userReservationByFloorDistributionType, floorDistribution);
-      }
-    } else {
-      if (reservation.email == ref.read(loggedInUserProvider)!.email) {
-        deleteReservation(reservation, floorDistribution);
-      }
+            user.getReservationByFloorDistributionType(floorDistribution.type)!,
+            floorDistribution);
+        break;
+      case ReservationProcessState.requestableButOwnReservationOnAnother:
+        var content =
+            localTexts.confirmReservationRequestDeletsOwnReservationDescription(
+                floorDistribution.type.getLocalizedName(localTexts));
+        _showConfirmDialog(content,
+            () => _deleteOwnReservationToRequestOther(user, floorDistribution));
+        break;
     }
   }
 
-  Reservation? getUserReservationByFloorDistributionType(
-      FloorDistributionType type) {
-    var user = ref.read(loggedInUserProvider);
-    if (type == FloorDistributionType.table) {
-      return user?.workingPlaceReservation;
-    } else if (type == FloorDistributionType.parkingLot) {
-      return user?.parkingLotReservation;
-    }
+  void _deleteOwnReservationToRequestOther(
+      User user, FloorDistribution floorDistribution) {
+    var ownReservationToDelete =
+        user.getReservationByFloorDistributionType(floorDistribution.type)!;
+    _deleteReservationWithCallbacks(ownReservationToDelete, floorDistribution,
+        () => requestFloorDistribution(floorDistribution: floorDistribution),
+        onError: (_) => _showErrorToast());
   }
 
   void deleteReservation(
       Reservation reservation, FloorDistribution floorDistribution) {
+    _deleteReservationWithCallbacks(
+        reservation,
+        floorDistribution,
+        () => _showSuccessToast(
+            AppLocalizations.of(navigatorKey.currentContext!)!
+                .reservationDeletionSuccessToast),
+        onError: (_) => _showErrorToast());
+  }
+
+  void _deleteReservationWithCallbacks(Reservation reservation,
+      FloorDistribution floorDistribution, Function onValue,
+      {Function? onError}) {
     ref
-        .watch(reservationServiceProvider)
+        .read(reservationServiceProvider)
         .deleteReservation(id: reservation.id!)
         .then((_) {
       ref
@@ -206,16 +297,15 @@ class ReservationScreenController extends _$ReservationScreenController {
           .read(loggedInUserProvider.notifier)
           .changeReservationAndFloorDistributionByType(
               type: floorDistribution.type);
-      _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
-          .reservationDeletionSuccessToast);
-    }, onError: (_) => _showErrorToast());
+      onValue.call();
+    }, onError: (_) => onError?.call());
   }
 
   void updateReservationFloorDistribution(
       Reservation reservation, FloorDistribution floorDistribution) {
     var newReservation = reservation.copyWith(roomId: floorDistribution.id);
     ref
-        .watch(reservationServiceProvider)
+        .read(reservationServiceProvider)
         .putReservation(reservation: newReservation)
         .then((_) {
       ref
@@ -237,11 +327,12 @@ class ReservationScreenController extends _$ReservationScreenController {
     }, onError: (_) => _showErrorToast());
   }
 
-  Future<void> reserveFloorDistribution(
-      FloorDistribution floorDistribution) async {
-    final reservation = _getDefaultReservation(floorDistribution.id);
+  void reserveFloorDistribution(
+      {required FloorDistribution floorDistribution,
+      Reservation? reservation}) {
+    reservation ??= _getDefaultReservation(floorDistribution.id);
     ref
-        .watch(reservationServiceProvider)
+        .read(reservationServiceProvider)
         .postReservation(reservation: reservation)
         .then((newReservation) {
       ref
@@ -254,8 +345,47 @@ class ReservationScreenController extends _$ReservationScreenController {
               type: floorDistribution.type,
               reservation: newReservation,
               floorDistribution: floorDistribution);
+      _clearReservationRequestProviderAfterReservationOfFloorDistribution(
+              floorDistribution)
+          .then((value) => _showSuccessToast(
+              AppLocalizations.of(navigatorKey.currentContext!)!
+                  .reservationSuccessToast));
+    }, onError: (_) => _showErrorToast());
+  }
+
+  void cancelReservationRequest(ReservationRequest reservationRequest) {
+    ref
+        .read(reservationRequestServiceProvider)
+        .cancelReservationRequest(
+            floorDistributionId: reservationRequest.roomId,
+            date: reservationRequest.startdate)
+        .then((_) {
+      ref
+          .read(reservationRequestByFloorDistributionProvider(
+                  reservationRequest.roomId)
+              .notifier)
+          .change(null);
       _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
-          .reservationSuccessToast);
+          .reservationRequestCancelationSuccessToast);
+    }, onError: (_) => _showErrorToast());
+  }
+
+  void requestFloorDistribution(
+      {required FloorDistribution floorDistribution,
+      ReservationRequest? reservationRequest}) {
+    reservationRequest ??= _getDefaultReservationRequest(floorDistribution.id);
+    ref
+        .read(reservationRequestServiceProvider)
+        .postReservationRequest(reservationRequest: reservationRequest)
+        .then((newReservationRequest) {
+      ref
+          .read(reservationRequestByFloorDistributionProvider(
+                  floorDistribution.id)
+              .notifier)
+          .change(newReservationRequest);
+      previouslyFilledReservationRequestProviders.add(floorDistribution.id);
+      _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+          .reservationRequestSuccessToast);
     }, onError: (_) => _showErrorToast());
   }
 
@@ -280,12 +410,51 @@ class ReservationScreenController extends _$ReservationScreenController {
     ).show(navigatorKey.currentContext!);
   }
 
+  void _showConfirmDialog(String content, Function() onAccept) {
+    showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.pleaseConfirm),
+            content: Text(content),
+            actions: [
+              // The "Yes" button
+              TextButton(
+                  onPressed: () {
+                    onAccept.call();
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.yesLarge)),
+              TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.noLarge))
+            ],
+          );
+        });
+  }
+
   Reservation _getDefaultReservation(int roomId) {
     final startdate =
         ref.read(selectedDateProvider).add(const Duration(hours: 7));
     final enddate =
         ref.read(selectedDateProvider).add(const Duration(hours: 20));
     return Reservation(
+        email: ref.read(loggedInUserProvider)!.email,
+        roomId: roomId,
+        startdate: startdate,
+        enddate: enddate);
+  }
+
+  ReservationRequest _getDefaultReservationRequest(int roomId) {
+    final startdate =
+        ref.read(selectedDateProvider).add(const Duration(hours: 7));
+    final enddate =
+        ref.read(selectedDateProvider).add(const Duration(hours: 20));
+    return ReservationRequest(
         email: ref.read(loggedInUserProvider)!.email,
         roomId: roomId,
         startdate: startdate,

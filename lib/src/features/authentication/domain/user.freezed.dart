@@ -254,7 +254,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 
 /// @nodoc
 
-class _$_User implements _User {
+class _$_User extends _User {
   _$_User(
       {required this.surname,
       required this.firstName,
@@ -264,7 +264,8 @@ class _$_User implements _User {
       this.workingPlaceReservation,
       this.workingPlace,
       this.parkingLotReservation,
-      this.parkingLot});
+      this.parkingLot})
+      : super._();
 
   @override
   final String surname;
@@ -333,7 +334,7 @@ class _$_User implements _User {
       __$$_UserCopyWithImpl<_$_User>(this, _$identity);
 }
 
-abstract class _User implements User {
+abstract class _User extends User {
   factory _User(
       {required final String surname,
       required final String firstName,
@@ -344,6 +345,7 @@ abstract class _User implements User {
       final FloorDistribution? workingPlace,
       final Reservation? parkingLotReservation,
       final FloorDistribution? parkingLot}) = _$_User;
+  _User._() : super._();
 
   @override
   String get surname;
