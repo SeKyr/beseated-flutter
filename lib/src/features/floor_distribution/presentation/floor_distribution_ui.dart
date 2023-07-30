@@ -1,20 +1,28 @@
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
-import 'package:beseated/src/features/reservation/presentation/reservation_by_floor_distibution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../authentication/presentation/logged_in_user.dart';
 import '../../reservation/domain/reservation.dart';
-import 'floor_distribution_selected.dart';
 
 class FloorDistributionUI extends ConsumerWidget {
   const FloorDistributionUI(
-      {super.key,
-      required this.floorDistribution,
-      this.onDoubleTap,
-      this.onTap});
+      {
+        super.key,
+        required this.floorDistribution,
+        required this.selected,
+        required this.loggedInUserEmail,
+        this.reservation,
+        this.onDoubleTap,
+        this.onTap
+      });
 
   final FloorDistribution floorDistribution;
+
+  final bool selected;
+
+  final Reservation? reservation;
+
+  final String loggedInUserEmail;
 
   final Function? onTap;
 
@@ -22,11 +30,7 @@ class FloorDistributionUI extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selected =
-        ref.watch(floorDistributionSelectedProvider(floorDistribution.id));
-    final reservation =
-        ref.watch(reservationByFloorDistributionProvider(floorDistribution.id));
-    final backgroundColor = _evaluateBackgroundColor(selected, reservation, context);
+    final backgroundColor = _evaluateBackgroundColor(context);
     return Positioned(
       left: floorDistribution.x.toDouble(),
       top: floorDistribution.y.toDouble(),
@@ -40,25 +44,30 @@ class FloorDistributionUI extends ConsumerWidget {
               border: Border.all(color: Colors.black, width: 1),
               borderRadius: BorderRadius.circular(3),
               color: backgroundColor),
-          child: _getFloorDistributionChild(reservation, ref.read(loggedInUserProvider)!.email),
+          child: _getFloorDistributionChild(context),
         ),
       ),
     );
   }
 
-  Color _evaluateBackgroundColor(bool selected, Reservation? reservation, BuildContext context) {
+  Color _evaluateBackgroundColor(BuildContext context) {
     if (floorDistribution.reservable) {
       if (reservation != null) {
-        return selected ? Colors.black12 : Colors.grey;
+        bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
+        if(isOwnReservation) {
+          return selected ? Theme.of(context).colorScheme.secondary.withOpacity(0.5)  : Theme.of(context).colorScheme.secondary;
+        } else {
+          return selected ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)  : Theme.of(context).colorScheme.primaryContainer;
+        }
       } else {
-        return selected ? Colors.lightBlueAccent : Theme.of(context).primaryColor;
+        return selected ? Theme.of(context).colorScheme.primary.withOpacity(0.5) : Theme.of(context).colorScheme.primary;
       }
     } else {
-      return Colors.white;
+      return Theme.of(context).colorScheme.background;
     }
   }
 
-  Widget? _getFloorDistributionChild(Reservation? reservation, String userEmail) {
+  Widget? _getFloorDistributionChild(BuildContext context) {
     if (floorDistribution.type == FloorDistributionType.room) {
       return Stack(children: [
         Positioned(
@@ -73,13 +82,14 @@ class FloorDistributionUI extends ConsumerWidget {
             ))
       ]);
     } else if (reservation != null) {
+      bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
       return CircleAvatar(
-        backgroundColor: reservation.email.toLowerCase() == userEmail.toLowerCase() ? const Color.fromRGBO(27, 121, 31, 100) : Colors.black,
+        backgroundColor: isOwnReservation ? Theme.of(context).colorScheme.onSecondary : Theme.of(context).colorScheme.onPrimaryContainer, //const Color.fromRGBO(27, 121, 31, 100)
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            reservation.initials,
-            style: const TextStyle(fontSize: 10, color: Colors.white),
+            reservation!.initials,
+            style: TextStyle(fontSize: 10, color: isOwnReservation ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primaryContainer),
           ),
         ),
       );

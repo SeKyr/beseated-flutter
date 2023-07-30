@@ -9,5 +9,11 @@
   "reservationDeletionSuccessToast": "Reservation successfully deleted",
   "errorToast": "Something went wrong",
   "settings": "Settings",
-  "offlineMode": "You are offline!"
+  "offlineMode": "You are offline!",
+  "notReservable": "Not reservable",
+  "notReserved": "Unoccupied",
+  "reserved": "Reserved",
+  "selfReserved": "Your Reservation",
+  "requested": "Requested",
+  "quickAction": "Quick Action"
 }

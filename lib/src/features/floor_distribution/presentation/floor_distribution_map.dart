@@ -3,7 +3,11 @@ import 'package:beseated/src/features/floor_distribution/presentation/floor_dist
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../authentication/presentation/logged_in_user.dart';
+import '../../reservation/presentation/reservation_by_floor_distibution.dart';
 import '../domain/floor_distribution.dart';
+import 'floor_distribution_selected.dart';
+import 'providable_floor_distribution_ui.dart';
 
 typedef OnChildInteractionCallback = Function(
     FloorDistribution floorDistribution);
@@ -51,21 +55,25 @@ class FloorDistributionMap extends ConsumerWidget {
               minScale: calculateMinScale(),
               child: Stack(children: [
                 ..._createUIElementsFromFloorDistributions(
-                    floorDistributions: floorDistributions),
+                    floorDistributions: floorDistributions
+                ),
                 SizedBox(width: width.toDouble(), height: height.toDouble())
               ])));
     });
   }
 
-  List<FloorDistributionUI> _createUIElementsFromFloorDistributions(
+  List<ProvidableFloorDistributionUI> _createUIElementsFromFloorDistributions(
       {required List<FloorDistribution> floorDistributions}) {
     floorDistributions.sort((a, b) => a.z - b.z);
     return floorDistributions
-        .map((item) => FloorDistributionUI(
-            floorDistribution: item,
-            onTap: item.reservable ? () => onReservableChildTap?.call(item) : null,
-            onDoubleTap: item.reservable
-                ? () => onReservableChildDoubleTap?.call(item)
+        .map((floorDistribution) => ProvidableFloorDistributionUI(
+            floorDistribution: floorDistribution,
+            selectedProvider: floorDistributionSelectedProvider(floorDistribution.id),
+            reservationProvider: reservationByFloorDistributionProvider(floorDistribution.id),
+            loggedInUserProvider: loggedInUserProvider,
+            onTap: floorDistribution.reservable ? () => onReservableChildTap?.call(floorDistribution) : null,
+            onDoubleTap: floorDistribution.reservable
+                ? () => onReservableChildDoubleTap?.call(floorDistribution)
                 : () => _handleDoubleTap()))
         .toList();
   }

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:beseated/src/features/authentication/presentation/logged_in_user.dart';
 import 'package:beseated/src/features/floor_distribution/presentation/selected_floor_distribution.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_screen_controller.dart';
+import 'package:beseated/src/features/reservation/presentation/reservations_legend.dart';
 import 'package:beseated/src/shared/ui/notifiable_loading_overlay_view.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,15 +38,19 @@ class ReservationScreen extends ConsumerWidget {
                       )),
               ]),
               actions: [
-                IconButton(
-                  icon: const Icon(
+                CustomPopupMenu(
+                  arrowColor: Theme.of(context).colorScheme.background, verticalMargin: -50,
+                  position: PreferredPosition.bottom,
+                  arrowSize: 20,
+                  menuBuilder: () {
+                    return const ReservationsLegend();
+                  },
+                  pressType: PressType.singleClick,
+                  child: const IconButton(icon: Icon(
                     Icons.help_outline_rounded,
                     color: Colors.black,
+                  ), onPressed: null,)
                   ),
-                  onPressed: () {
-                    // do something
-                  },
-                )
               ]),
           body: FloorDistributionMap(
             floorDistributionsProvider:

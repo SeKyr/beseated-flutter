@@ -40,7 +40,7 @@ class BeSeated extends ConsumerWidget {
       builder: connectivitiyState.isLoading || connectivitiyState.value?.hasNetwork == true ?  null : (context, child) => builder(context, child),
       theme: ThemeData(
         listTileTheme: const ListTileThemeData(horizontalTitleGap: 5, minLeadingWidth: 5, ),
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(0, 76, 146, 1.0))
       ),
       routerConfig: AppUtils.router,
     );
