@@ -69,7 +69,7 @@ class ReservationScreen extends ConsumerWidget {
   }
 
   Widget _getAnimatedTitle(WidgetRef ref) {
-    return Consumer(builder: (contex, ref, __) {
+    return Consumer(builder: (context, ref, __) {
       var title = ref.watch(reservationScreenTitleProvider);
       return AnimatedSwitcher(
         duration: const Duration(milliseconds: 1000),
@@ -81,7 +81,7 @@ class ReservationScreen extends ConsumerWidget {
             // child each time the count changes, so that it will begin its animation
             // when the count changes.
             key: ValueKey<String>(title),
-            style: const TextStyle(color: Colors.black, fontSize: 15)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 15)),
       );
     },);
   }

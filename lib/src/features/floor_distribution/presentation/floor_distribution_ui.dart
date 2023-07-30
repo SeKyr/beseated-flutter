@@ -41,7 +41,7 @@ class FloorDistributionUI extends ConsumerWidget {
         onDoubleTap: () => onDoubleTap?.call(),
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1),
+              border: Border.all(color: Theme.of(context).colorScheme.onBackground, width: 1),
               borderRadius: BorderRadius.circular(3),
               color: backgroundColor),
           child: _getFloorDistributionChild(context),
@@ -77,7 +77,7 @@ class FloorDistributionUI extends ConsumerWidget {
               fit: BoxFit.scaleDown,
               child: Text(
                 floorDistribution.name,
-                style: const TextStyle(fontSize: 10, color: Colors.black),
+                style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onBackground),
               ),
             ))
       ]);
