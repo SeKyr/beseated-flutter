@@ -19,7 +19,7 @@ class BeSeatedSecuredHttpClient{
     return response;
   }
 
-  Future<http.Response> post(String url, Object body, {bool bodyIsJson = false}) async {
+  Future<http.Response> post(String url, {Object? body, bool bodyIsJson = false}) async {
     final headers = await _defaultHeaders;
     final response = await http.post(
         Uri.parse(_baseUrl + url),
@@ -29,12 +29,12 @@ class BeSeatedSecuredHttpClient{
     return response;
   }
 
-  Future<http.Response> put(String url, Object body) async {
+  Future<http.Response> put(String url, {Object? body, bool bodyIsJson = false}) async {
     final headers = await _defaultHeaders;
     final response = await http.put(
         Uri.parse(_baseUrl + url),
         headers: headers,
-        body: json.encode(body));
+        body: bodyIsJson ? jsonEncode(body) : body);
     handleError(response);
     return response;
   }

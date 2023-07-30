@@ -22,11 +22,11 @@ class ReservationRepository {
   }
   
   Future postReservation({required Reservation reservation}) {
-    return client.post('$_baseEndpointUrl/insert', reservation.toJson(), bodyIsJson: true);
+    return client.post('$_baseEndpointUrl/insert', body: reservation.toJson(), bodyIsJson: true);
   }
 
   Future putReservation({required Reservation reservation}) {
-    return client.post('$_baseEndpointUrl/update', reservation.toJson(), bodyIsJson: true);
+    return client.post('$_baseEndpointUrl/update', body: reservation.toJson(), bodyIsJson: true);
   }
 
   Future deleteReservation({required int id}) {

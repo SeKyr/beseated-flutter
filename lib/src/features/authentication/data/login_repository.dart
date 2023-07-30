@@ -15,7 +15,7 @@ class LoginRepository {
   final BeSeatedSecuredHttpClient client;
   
   Future<String> loginWithAzureToken(String token) async {
-    final response = await client.post('$_baseEndpointUrl/ADToken', token);
+    final response = await client.post('$_baseEndpointUrl/ADToken', body: token);
     final json = AppUtils.decodeJson(response.body);
     return json['token'];
   }
