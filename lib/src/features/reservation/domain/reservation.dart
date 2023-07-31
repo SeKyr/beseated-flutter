@@ -1,3 +1,4 @@
+import 'package:beseated/src/shared/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../series/domain/series.dart';
@@ -18,11 +19,18 @@ class Reservation with _$Reservation {
 
   factory Reservation.fromJson(Map<String, dynamic> json) => _$ReservationFromJson(json);
 
-  get initials {
+  String get initials {
+    var splittedBySpace = fullName.split(' ');
+    return splittedBySpace[0][0] + splittedBySpace[1][0];
+  }
+
+  String get fullName {
     var splittedByDot = this.email.split('.');
     var prename = splittedByDot[0];
     var splittedByDotSplittedByAt = splittedByDot[1].split('@');
     var surname = splittedByDotSplittedByAt[0];
-    return prename[0].toUpperCase() + surname[0].toUpperCase();
+    prename = prename.capitalize();
+    surname = surname.capitalize();
+    return "$prename $surname";
   }
 }

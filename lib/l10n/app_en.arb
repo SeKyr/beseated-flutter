@@ -40,5 +40,18 @@
   "yesLarge": "Yes",
   "noLarge": "No",
   "workingDesk": "working desk",
-  "parkingLot": "parking lot"
+  "parkingLot": "parking lot",
+  "reservationRequests": "Reservation requests",
+  "id": "Id",
+  "floorDistribution": "Object",
+  "date": "Date",
+  "begin": "Begin",
+  "end": "End",
+  "person": "Person",
+  "action": "Action",
+  "noOpenRequests": "No open requests.",
+  "requestAcceptConfirmation": "Are you sure to accept the request?",
+  "requestRejectConfirmation": "Are you sure to reject the request?",
+  "reservationRequestAcceptedToast": "Acception successful",
+  "reservationRequestRejectedToast": "Rejection successful"
 }

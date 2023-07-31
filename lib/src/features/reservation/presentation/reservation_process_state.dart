@@ -23,7 +23,7 @@ enum ReservationProcessState {
     } else {
       var userReservationByFloorDistributionType =
       user.getReservationByFloorDistributionType(floorDistribution.type);
-      if (floorDistribution.owner != null) {
+      if (floorDistribution.owner != null && floorDistribution.owner!.toLowerCase() != user.email.toLowerCase()) {
         if (userReservationByFloorDistributionType == null) {
           return ReservationProcessState.requestable;
         } else {

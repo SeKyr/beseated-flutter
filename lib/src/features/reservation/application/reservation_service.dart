@@ -15,10 +15,8 @@ class ReservationService {
     return reservationRepository.getReservationsByDate(date: date);
   }
 
-  Future<Reservation> postReservation({required Reservation reservation}) async {
-    await reservationRepository.postReservation(reservation: reservation);
-    var reservationsOnDate = await getReservationsByDate(date: reservation.startdate);
-    return reservationsOnDate.firstWhere((loadedReservation) => loadedReservation.roomId == reservation.roomId);
+  Future<Reservation> postReservation({required Reservation reservation}) {
+    return reservationRepository.postReservation(reservation: reservation);
   }
 
   Future putReservation({required Reservation reservation}) {

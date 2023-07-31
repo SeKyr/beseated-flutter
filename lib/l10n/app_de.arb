@@ -24,5 +24,18 @@
   "yesLarge": "Ja",
   "noLarge": "Nein",
   "workingDesk": "Arbeitsplatz",
-  "parkingLot": "Parkplatz"
+  "parkingLot": "Parkplatz",
+  "reservationRequests": "Reservierungs-Anfragen",
+  "id": "Id",
+  "floorDistribution": "Objekt",
+  "date": "Datum",
+  "begin": "Beginn",
+  "end": "Ende",
+  "person": "Person",
+  "action": "Aktion",
+  "noOpenRequests": "Keine offenen Anfragen.",
+  "requestAcceptConfirmation": "Willst du die Anfrage wirklich annehmen?",
+  "requestRejectConfirmation": "Willst du die Anfrage wirklich ablehnen?",
+  "reservationRequestAcceptedToast": "Erfolgreich akzeptiert",
+  "reservationRequestRejectedToast": "Erfolgreich abgelehnt"
 }

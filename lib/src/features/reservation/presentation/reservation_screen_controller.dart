@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:beseated/src/features/floor_distribution/application/floor_distribution_service.dart';
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/features/location/presentation/selected_location.dart';
@@ -6,9 +8,6 @@ import 'package:beseated/src/features/reservation/presentation/reservation_proce
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
 import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -42,6 +41,8 @@ class ReservationScreenController extends _$ReservationScreenController {
   bool floorDistsLoaded = false;
   bool reservationsAndRequestsLoaded = false;
 
+  Timer? _timer;
+
   Location? location;
 
   @override
@@ -54,6 +55,14 @@ class ReservationScreenController extends _$ReservationScreenController {
     _getReservationsAndRequestsOnDateChange();
     _getFloorDistributionsOnFloorChange();
     _updateLocationOnChange();
+  }
+
+  void _initalizeReloadTimer(DateTime date) {
+    _timer?.cancel();
+    // Set Timer to reload Data every Minute
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
+      _getReservationsAndRequestsAndFillProvider(date);
+    });
   }
 
   void _updateLocationOnChange() {
@@ -79,10 +88,15 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   void _getReservationsAndRequestsOnDateChange() {
     var selectedDate = ref.read(selectedDateProvider);
-    _getReservationsAndRequestsAndFillProvider(selectedDate);
+    _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(selectedDate);
     ref.listen(selectedDateProvider, (previous, next) async {
-      await _getReservationsAndRequestsAndFillProvider(next);
+      _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(next);
     });
+  }
+
+  void _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(DateTime date) {
+    _getReservationsAndRequestsAndFillProvider(date);
+    _initalizeReloadTimer(date);
   }
 
   void _changeReservationsLoaded(bool value) {
@@ -234,7 +248,7 @@ class ReservationScreenController extends _$ReservationScreenController {
       case ReservationProcessState.requestable:
         var content = localTexts.confirmReservationRequestDescription(
             floorDistribution.type.getLocalizedName(localTexts));
-        _showConfirmDialog(
+        AppUtils.showConfirmDialog(
             content,
             () =>
                 requestFloorDistribution(floorDistribution: floorDistribution));
@@ -256,7 +270,7 @@ class ReservationScreenController extends _$ReservationScreenController {
         var content =
             localTexts.confirmReservationRequestDeletsOwnReservationDescription(
                 floorDistribution.type.getLocalizedName(localTexts));
-        _showConfirmDialog(content,
+        AppUtils.showConfirmDialog(content,
             () => _deleteOwnReservationToRequestOther(user, floorDistribution));
         break;
     }
@@ -268,7 +282,7 @@ class ReservationScreenController extends _$ReservationScreenController {
         user.getReservationByFloorDistributionType(floorDistribution.type)!;
     _deleteReservationWithCallbacks(ownReservationToDelete, floorDistribution,
         () => requestFloorDistribution(floorDistribution: floorDistribution),
-        onError: (_) => _showErrorToast());
+        onError: (_) => AppUtils.showErrorToast());
   }
 
   void deleteReservation(
@@ -276,10 +290,10 @@ class ReservationScreenController extends _$ReservationScreenController {
     _deleteReservationWithCallbacks(
         reservation,
         floorDistribution,
-        () => _showSuccessToast(
+        () => AppUtils.showSuccessToast(
             AppLocalizations.of(navigatorKey.currentContext!)!
                 .reservationDeletionSuccessToast),
-        onError: (_) => _showErrorToast());
+        onError: (_) => AppUtils.showErrorToast());
   }
 
   void _deleteReservationWithCallbacks(Reservation reservation,
@@ -322,9 +336,9 @@ class ReservationScreenController extends _$ReservationScreenController {
               type: floorDistribution.type,
               reservation: newReservation,
               floorDistribution: floorDistribution);
-      _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
           .reservationChangeSuccessToast);
-    }, onError: (_) => _showErrorToast());
+    }, onError: (_) => AppUtils.showErrorToast());
   }
 
   void reserveFloorDistribution(
@@ -347,10 +361,10 @@ class ReservationScreenController extends _$ReservationScreenController {
               floorDistribution: floorDistribution);
       _clearReservationRequestProviderAfterReservationOfFloorDistribution(
               floorDistribution)
-          .then((value) => _showSuccessToast(
+          .then((value) => AppUtils.showSuccessToast(
               AppLocalizations.of(navigatorKey.currentContext!)!
                   .reservationSuccessToast));
-    }, onError: (_) => _showErrorToast());
+    }, onError: (_) => AppUtils.showErrorToast());
   }
 
   void cancelReservationRequest(ReservationRequest reservationRequest) {
@@ -365,9 +379,9 @@ class ReservationScreenController extends _$ReservationScreenController {
                   reservationRequest.roomId)
               .notifier)
           .change(null);
-      _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
           .reservationRequestCancelationSuccessToast);
-    }, onError: (_) => _showErrorToast());
+    }, onError: (_) => AppUtils.showErrorToast());
   }
 
   void requestFloorDistribution(
@@ -384,57 +398,9 @@ class ReservationScreenController extends _$ReservationScreenController {
               .notifier)
           .change(newReservationRequest);
       previouslyFilledReservationRequestProviders.add(floorDistribution.id);
-      _showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
           .reservationRequestSuccessToast);
-    }, onError: (_) => _showErrorToast());
-  }
-
-  void _showErrorToast() {
-    CherryToast.error(
-      title:
-          Text(AppLocalizations.of(navigatorKey.currentContext!)!.errorToast),
-      toastPosition: Position.bottom,
-      animationType: AnimationType.fromBottom,
-      animationDuration: const Duration(milliseconds: 200),
-      toastDuration: const Duration(seconds: 1, milliseconds: 500),
-    ).show(navigatorKey.currentContext!);
-  }
-
-  void _showSuccessToast(String text) {
-    CherryToast.success(
-      title: Text(text),
-      toastPosition: Position.bottom,
-      animationType: AnimationType.fromBottom,
-      animationDuration: const Duration(milliseconds: 200),
-      toastDuration: const Duration(seconds: 1, milliseconds: 500),
-    ).show(navigatorKey.currentContext!);
-  }
-
-  void _showConfirmDialog(String content, Function() onAccept) {
-    showDialog(
-        context: navigatorKey.currentContext!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.pleaseConfirm),
-            content: Text(content),
-            actions: [
-              // The "Yes" button
-              TextButton(
-                  onPressed: () {
-                    onAccept.call();
-                    // Close the dialog
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.yesLarge)),
-              TextButton(
-                  onPressed: () {
-                    // Close the dialog
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.noLarge))
-            ],
-          );
-        });
+    }, onError: (_) => AppUtils.showErrorToast());
   }
 
   Reservation _getDefaultReservation(int roomId) {

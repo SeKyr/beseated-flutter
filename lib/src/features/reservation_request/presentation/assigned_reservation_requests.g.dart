@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'reservation_screen_controller.dart';
+part of 'assigned_reservation_requests.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -29,23 +29,23 @@ class _SystemHash {
   }
 }
 
-String _$ReservationScreenControllerHash() =>
-    r'1ca712781f8f9d43062e498f54cab838c6feff7d';
+String _$AssignedReservationRequestsHash() =>
+    r'4f0f850f15ffd8ff59616200ca76e7850dfc1327';
 
-/// See also [ReservationScreenController].
-final reservationScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider<ReservationScreenController, bool>(
-  ReservationScreenController.new,
-  name: r'reservationScreenControllerProvider',
+/// See also [AssignedReservationRequests].
+final assignedReservationRequestsProvider = AutoDisposeNotifierProvider<
+    AssignedReservationRequests, List<ReservationRequest>>(
+  AssignedReservationRequests.new,
+  name: r'assignedReservationRequestsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$ReservationScreenControllerHash,
+      : _$AssignedReservationRequestsHash,
 );
-typedef ReservationScreenControllerRef
-    = AutoDisposeAsyncNotifierProviderRef<bool>;
+typedef AssignedReservationRequestsRef
+    = AutoDisposeNotifierProviderRef<List<ReservationRequest>>;
 
-abstract class _$ReservationScreenController
-    extends AutoDisposeAsyncNotifier<bool> {
+abstract class _$AssignedReservationRequests
+    extends AutoDisposeNotifier<List<ReservationRequest>> {
   @override
-  FutureOr<bool> build();
+  List<ReservationRequest> build();
 }

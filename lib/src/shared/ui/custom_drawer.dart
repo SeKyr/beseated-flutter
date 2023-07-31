@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:beseated/src/features/authentication/application/auth_service.dart';
 import 'package:beseated/src/features/location/presentation/location_selection.dart';
+import 'package:beseated/src/features/reservation_request/presentation/assigned_reservation_requests_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,13 +67,26 @@ class CustomDrawer extends ConsumerWidget {
   }
 
   Widget _getNavBarBody(WidgetRef ref, BuildContext context) {
-    return const Expanded(
+    return Expanded(
         child: SingleChildScrollView(
             child: Column(
       children: [
-        LocationSelection(),
+        const LocationSelection(),
+        _getReservationRequestListTile(context)
       ],
     )));
+  }
+
+  Widget _getReservationRequestListTile(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        context.go("/reservation-requests");
+        rootScaffoldKey.currentState!.closeDrawer();
+      },
+      leading: const Icon(Icons.assignment),
+      title: AssignedReservationRequestsBadge(
+          child: Text(localTexts.reservationRequests,)),
+    );
   }
 
   Widget _getFooter(WidgetRef ref, BuildContext context) {
@@ -85,7 +99,7 @@ class CustomDrawer extends ConsumerWidget {
                 child: ListTile(
                   onTap: () => _logout(ref, context),
                   leading: const Icon(Icons.logout),
-                  title: Text(AppLocalizations.of(context)!.logout),
+                  title: Text(localTexts.logout),
                 ),
               ),
               Expanded(
@@ -95,7 +109,7 @@ class CustomDrawer extends ConsumerWidget {
                     rootScaffoldKey.currentState!.closeDrawer();
                   },
                   leading: const Icon(Icons.settings),
-                  title: Text(AppLocalizations.of(context)!.settings),
+                  title: Text(localTexts.settings),
                 ),
               ),
             ],
