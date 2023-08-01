@@ -8,6 +8,7 @@ import 'package:beseated/src/features/reservation/presentation/reservation_proce
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
 import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -47,7 +48,9 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   @override
   FutureOr<bool> build() {
-    _initalizeListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _initalizeListeners();
+    });
     return false;
   }
 
@@ -60,8 +63,8 @@ class ReservationScreenController extends _$ReservationScreenController {
   void _initalizeReloadTimer(DateTime date) {
     _timer?.cancel();
     // Set Timer to reload Data every Minute
-    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
-      _getReservationsAndRequestsAndFillProvider(date);
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
+      await _getReservationsAndRequestsAndFillProvider(date);
     });
   }
 
@@ -86,16 +89,16 @@ class ReservationScreenController extends _$ReservationScreenController {
     });
   }
 
-  void _getReservationsAndRequestsOnDateChange() {
+  Future<void> _getReservationsAndRequestsOnDateChange() async {
     var selectedDate = ref.read(selectedDateProvider);
-    _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(selectedDate);
+    await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(selectedDate);
     ref.listen(selectedDateProvider, (previous, next) async {
-      _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(next);
+      await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(next);
     });
   }
 
-  void _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(DateTime date) {
-    _getReservationsAndRequestsAndFillProvider(date);
+  Future<void> _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(DateTime date) async {
+    await _getReservationsAndRequestsAndFillProvider(date);
     _initalizeReloadTimer(date);
   }
 
@@ -183,17 +186,15 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   Future<void> _fillOwnReservations(List<Reservation> ownReservations) async {
+    List<ReservationAndFloorDistribution> list = List.empty(growable: true);
     for (var reservation in ownReservations) {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
           .getFloorDistributionById(id: reservation.roomId);
-      ref
-          .read(loggedInUserProvider.notifier)
-          .changeReservationAndFloorDistributionByType(
-              type: floorDistribution.type,
-              reservation: reservation,
-              floorDistribution: floorDistribution);
+      list.add(ReservationAndFloorDistribution(reservation: reservation, floorDistribution: floorDistribution));
     }
+    ref
+        .read(loggedInUserProvider.notifier).changeOwnReservationAndFloorDistributions(list);
   }
 
   void _clearReservationRequestProviders(
@@ -219,14 +220,6 @@ class ReservationScreenController extends _$ReservationScreenController {
     });
     previouslyFilledReservationProviders.clear();
     previouslyFilledReservationProviders.addAll(reservedFloorDistributionIds);
-    ref
-        .read(loggedInUserProvider.notifier)
-        .changeReservationAndFloorDistributionByType(
-            type: FloorDistributionType.table);
-    ref
-        .read(loggedInUserProvider.notifier)
-        .changeReservationAndFloorDistributionByType(
-            type: FloorDistributionType.parkingLot);
   }
 
   Future<void> handleFloorDistributionDoubleTap(
@@ -309,8 +302,7 @@ class ReservationScreenController extends _$ReservationScreenController {
           .change(null);
       ref
           .read(loggedInUserProvider.notifier)
-          .changeReservationAndFloorDistributionByType(
-              type: floorDistribution.type);
+          .deleteReservationAndFloorDistributionByType(floorDistribution.type);
       onValue.call();
     }, onError: (_) => onError?.call());
   }
@@ -333,9 +325,8 @@ class ReservationScreenController extends _$ReservationScreenController {
       ref
           .read(loggedInUserProvider.notifier)
           .changeReservationAndFloorDistributionByType(
-              type: floorDistribution.type,
-              reservation: newReservation,
-              floorDistribution: floorDistribution);
+          ReservationAndFloorDistribution(reservation: newReservation, floorDistribution: floorDistribution),
+          floorDistribution.type);
       AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
           .reservationChangeSuccessToast);
     }, onError: (_) => AppUtils.showErrorToast());
@@ -356,9 +347,9 @@ class ReservationScreenController extends _$ReservationScreenController {
       ref
           .read(loggedInUserProvider.notifier)
           .changeReservationAndFloorDistributionByType(
-              type: floorDistribution.type,
-              reservation: newReservation,
-              floorDistribution: floorDistribution);
+          ReservationAndFloorDistribution(reservation: newReservation, floorDistribution: floorDistribution),
+          floorDistribution.type
+      );
       _clearReservationRequestProviderAfterReservationOfFloorDistribution(
               floorDistribution)
           .then((value) => AppUtils.showSuccessToast(

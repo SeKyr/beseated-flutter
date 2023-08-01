@@ -25,6 +25,8 @@ final shellKey = GlobalKey<NavigatorState>();
 
 final localTexts = AppLocalizations.of(navigatorKey.currentContext!)!;
 
+final globalTheme = Theme.of(navigatorKey.currentContext!);
+
 class AppUtils {
   static String get beSeatedApiUrl {
     const url = String.fromEnvironment('BESEATED_API_URL',

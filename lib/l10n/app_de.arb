@@ -37,5 +37,7 @@
   "requestAcceptConfirmation": "Willst du die Anfrage wirklich annehmen?",
   "requestRejectConfirmation": "Willst du die Anfrage wirklich ablehnen?",
   "reservationRequestAcceptedToast": "Erfolgreich akzeptiert",
-  "reservationRequestRejectedToast": "Erfolgreich abgelehnt"
+  "reservationRequestRejectedToast": "Erfolgreich abgelehnt",
+  "youSure": "Bist du dir sicher?",
+  "noReservation": "Keine Reservierung"
 }

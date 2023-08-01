@@ -30,10 +30,10 @@ class Datepicker extends ConsumerWidget {
           child: Material(
             elevation: 6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            child: Container(
-              child: const Icon(Icons.calendar_today_rounded),
+            child: const SizedBox(
               width: 56,
               height: 56,
+              child: Icon(Icons.calendar_today_rounded),
             ),
           ),
         ),

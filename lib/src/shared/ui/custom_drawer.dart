@@ -9,8 +9,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/authentication/presentation/logged_in_user.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../app_utils.dart';
 
 class CustomDrawer extends ConsumerWidget {
@@ -18,7 +16,7 @@ class CustomDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(loggedInUserProvider);
+    final user = ref.read(loggedInUserProvider);
     final userAccountsDrawerHeader = user != null
         ? UserAccountsDrawerHeader(
             accountName: Text('${user.firstName} ${user.surname}'),

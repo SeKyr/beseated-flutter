@@ -21,11 +21,12 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   String? get organizationLogo => throw _privateConstructorUsedError;
-  Reservation? get workingPlaceReservation =>
-      throw _privateConstructorUsedError;
-  FloorDistribution? get workingPlace => throw _privateConstructorUsedError;
-  Reservation? get parkingLotReservation => throw _privateConstructorUsedError;
-  FloorDistribution? get parkingLot => throw _privateConstructorUsedError;
+  ReservationAndFloorDistribution?
+      get workingPlaceReservationAndFloorDistribution =>
+          throw _privateConstructorUsedError;
+  ReservationAndFloorDistribution?
+      get parkingLotReservationAndFloorDistribution =>
+          throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
@@ -42,15 +43,10 @@ abstract class $UserCopyWith<$Res> {
       String email,
       String? image,
       String? organizationLogo,
-      Reservation? workingPlaceReservation,
-      FloorDistribution? workingPlace,
-      Reservation? parkingLotReservation,
-      FloorDistribution? parkingLot});
-
-  $ReservationCopyWith<$Res>? get workingPlaceReservation;
-  $FloorDistributionCopyWith<$Res>? get workingPlace;
-  $ReservationCopyWith<$Res>? get parkingLotReservation;
-  $FloorDistributionCopyWith<$Res>? get parkingLot;
+      ReservationAndFloorDistribution?
+          workingPlaceReservationAndFloorDistribution,
+      ReservationAndFloorDistribution?
+          parkingLotReservationAndFloorDistribution});
 }
 
 /// @nodoc
@@ -71,10 +67,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = null,
     Object? image = freezed,
     Object? organizationLogo = freezed,
-    Object? workingPlaceReservation = freezed,
-    Object? workingPlace = freezed,
-    Object? parkingLotReservation = freezed,
-    Object? parkingLot = freezed,
+    Object? workingPlaceReservationAndFloorDistribution = freezed,
+    Object? parkingLotReservationAndFloorDistribution = freezed,
   }) {
     return _then(_value.copyWith(
       surname: null == surname
@@ -97,71 +91,17 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.organizationLogo
           : organizationLogo // ignore: cast_nullable_to_non_nullable
               as String?,
-      workingPlaceReservation: freezed == workingPlaceReservation
-          ? _value.workingPlaceReservation
-          : workingPlaceReservation // ignore: cast_nullable_to_non_nullable
-              as Reservation?,
-      workingPlace: freezed == workingPlace
-          ? _value.workingPlace
-          : workingPlace // ignore: cast_nullable_to_non_nullable
-              as FloorDistribution?,
-      parkingLotReservation: freezed == parkingLotReservation
-          ? _value.parkingLotReservation
-          : parkingLotReservation // ignore: cast_nullable_to_non_nullable
-              as Reservation?,
-      parkingLot: freezed == parkingLot
-          ? _value.parkingLot
-          : parkingLot // ignore: cast_nullable_to_non_nullable
-              as FloorDistribution?,
+      workingPlaceReservationAndFloorDistribution: freezed ==
+              workingPlaceReservationAndFloorDistribution
+          ? _value.workingPlaceReservationAndFloorDistribution
+          : workingPlaceReservationAndFloorDistribution // ignore: cast_nullable_to_non_nullable
+              as ReservationAndFloorDistribution?,
+      parkingLotReservationAndFloorDistribution: freezed ==
+              parkingLotReservationAndFloorDistribution
+          ? _value.parkingLotReservationAndFloorDistribution
+          : parkingLotReservationAndFloorDistribution // ignore: cast_nullable_to_non_nullable
+              as ReservationAndFloorDistribution?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ReservationCopyWith<$Res>? get workingPlaceReservation {
-    if (_value.workingPlaceReservation == null) {
-      return null;
-    }
-
-    return $ReservationCopyWith<$Res>(_value.workingPlaceReservation!, (value) {
-      return _then(_value.copyWith(workingPlaceReservation: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $FloorDistributionCopyWith<$Res>? get workingPlace {
-    if (_value.workingPlace == null) {
-      return null;
-    }
-
-    return $FloorDistributionCopyWith<$Res>(_value.workingPlace!, (value) {
-      return _then(_value.copyWith(workingPlace: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ReservationCopyWith<$Res>? get parkingLotReservation {
-    if (_value.parkingLotReservation == null) {
-      return null;
-    }
-
-    return $ReservationCopyWith<$Res>(_value.parkingLotReservation!, (value) {
-      return _then(_value.copyWith(parkingLotReservation: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $FloorDistributionCopyWith<$Res>? get parkingLot {
-    if (_value.parkingLot == null) {
-      return null;
-    }
-
-    return $FloorDistributionCopyWith<$Res>(_value.parkingLot!, (value) {
-      return _then(_value.copyWith(parkingLot: value) as $Val);
-    });
   }
 }
 
@@ -177,19 +117,10 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String email,
       String? image,
       String? organizationLogo,
-      Reservation? workingPlaceReservation,
-      FloorDistribution? workingPlace,
-      Reservation? parkingLotReservation,
-      FloorDistribution? parkingLot});
-
-  @override
-  $ReservationCopyWith<$Res>? get workingPlaceReservation;
-  @override
-  $FloorDistributionCopyWith<$Res>? get workingPlace;
-  @override
-  $ReservationCopyWith<$Res>? get parkingLotReservation;
-  @override
-  $FloorDistributionCopyWith<$Res>? get parkingLot;
+      ReservationAndFloorDistribution?
+          workingPlaceReservationAndFloorDistribution,
+      ReservationAndFloorDistribution?
+          parkingLotReservationAndFloorDistribution});
 }
 
 /// @nodoc
@@ -206,10 +137,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? email = null,
     Object? image = freezed,
     Object? organizationLogo = freezed,
-    Object? workingPlaceReservation = freezed,
-    Object? workingPlace = freezed,
-    Object? parkingLotReservation = freezed,
-    Object? parkingLot = freezed,
+    Object? workingPlaceReservationAndFloorDistribution = freezed,
+    Object? parkingLotReservationAndFloorDistribution = freezed,
   }) {
     return _then(_$_User(
       surname: null == surname
@@ -232,22 +161,16 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.organizationLogo
           : organizationLogo // ignore: cast_nullable_to_non_nullable
               as String?,
-      workingPlaceReservation: freezed == workingPlaceReservation
-          ? _value.workingPlaceReservation
-          : workingPlaceReservation // ignore: cast_nullable_to_non_nullable
-              as Reservation?,
-      workingPlace: freezed == workingPlace
-          ? _value.workingPlace
-          : workingPlace // ignore: cast_nullable_to_non_nullable
-              as FloorDistribution?,
-      parkingLotReservation: freezed == parkingLotReservation
-          ? _value.parkingLotReservation
-          : parkingLotReservation // ignore: cast_nullable_to_non_nullable
-              as Reservation?,
-      parkingLot: freezed == parkingLot
-          ? _value.parkingLot
-          : parkingLot // ignore: cast_nullable_to_non_nullable
-              as FloorDistribution?,
+      workingPlaceReservationAndFloorDistribution: freezed ==
+              workingPlaceReservationAndFloorDistribution
+          ? _value.workingPlaceReservationAndFloorDistribution
+          : workingPlaceReservationAndFloorDistribution // ignore: cast_nullable_to_non_nullable
+              as ReservationAndFloorDistribution?,
+      parkingLotReservationAndFloorDistribution: freezed ==
+              parkingLotReservationAndFloorDistribution
+          ? _value.parkingLotReservationAndFloorDistribution
+          : parkingLotReservationAndFloorDistribution // ignore: cast_nullable_to_non_nullable
+              as ReservationAndFloorDistribution?,
     ));
   }
 }
@@ -261,10 +184,8 @@ class _$_User extends _User {
       required this.email,
       this.image,
       this.organizationLogo,
-      this.workingPlaceReservation,
-      this.workingPlace,
-      this.parkingLotReservation,
-      this.parkingLot})
+      this.workingPlaceReservationAndFloorDistribution,
+      this.parkingLotReservationAndFloorDistribution})
       : super._();
 
   @override
@@ -278,17 +199,15 @@ class _$_User extends _User {
   @override
   final String? organizationLogo;
   @override
-  final Reservation? workingPlaceReservation;
+  final ReservationAndFloorDistribution?
+      workingPlaceReservationAndFloorDistribution;
   @override
-  final FloorDistribution? workingPlace;
-  @override
-  final Reservation? parkingLotReservation;
-  @override
-  final FloorDistribution? parkingLot;
+  final ReservationAndFloorDistribution?
+      parkingLotReservationAndFloorDistribution;
 
   @override
   String toString() {
-    return 'User(surname: $surname, firstName: $firstName, email: $email, image: $image, organizationLogo: $organizationLogo, workingPlaceReservation: $workingPlaceReservation, workingPlace: $workingPlace, parkingLotReservation: $parkingLotReservation, parkingLot: $parkingLot)';
+    return 'User(surname: $surname, firstName: $firstName, email: $email, image: $image, organizationLogo: $organizationLogo, workingPlaceReservationAndFloorDistribution: $workingPlaceReservationAndFloorDistribution, parkingLotReservationAndFloorDistribution: $parkingLotReservationAndFloorDistribution)';
   }
 
   @override
@@ -303,15 +222,14 @@ class _$_User extends _User {
             (identical(other.image, image) || other.image == image) &&
             (identical(other.organizationLogo, organizationLogo) ||
                 other.organizationLogo == organizationLogo) &&
-            (identical(
-                    other.workingPlaceReservation, workingPlaceReservation) ||
-                other.workingPlaceReservation == workingPlaceReservation) &&
-            (identical(other.workingPlace, workingPlace) ||
-                other.workingPlace == workingPlace) &&
-            (identical(other.parkingLotReservation, parkingLotReservation) ||
-                other.parkingLotReservation == parkingLotReservation) &&
-            (identical(other.parkingLot, parkingLot) ||
-                other.parkingLot == parkingLot));
+            (identical(other.workingPlaceReservationAndFloorDistribution,
+                    workingPlaceReservationAndFloorDistribution) ||
+                other.workingPlaceReservationAndFloorDistribution ==
+                    workingPlaceReservationAndFloorDistribution) &&
+            (identical(other.parkingLotReservationAndFloorDistribution,
+                    parkingLotReservationAndFloorDistribution) ||
+                other.parkingLotReservationAndFloorDistribution ==
+                    parkingLotReservationAndFloorDistribution));
   }
 
   @override
@@ -322,10 +240,8 @@ class _$_User extends _User {
       email,
       image,
       organizationLogo,
-      workingPlaceReservation,
-      workingPlace,
-      parkingLotReservation,
-      parkingLot);
+      workingPlaceReservationAndFloorDistribution,
+      parkingLotReservationAndFloorDistribution);
 
   @JsonKey(ignore: true)
   @override
@@ -341,10 +257,10 @@ abstract class _User extends User {
       required final String email,
       final String? image,
       final String? organizationLogo,
-      final Reservation? workingPlaceReservation,
-      final FloorDistribution? workingPlace,
-      final Reservation? parkingLotReservation,
-      final FloorDistribution? parkingLot}) = _$_User;
+      final ReservationAndFloorDistribution?
+          workingPlaceReservationAndFloorDistribution,
+      final ReservationAndFloorDistribution?
+          parkingLotReservationAndFloorDistribution}) = _$_User;
   _User._() : super._();
 
   @override
@@ -358,13 +274,11 @@ abstract class _User extends User {
   @override
   String? get organizationLogo;
   @override
-  Reservation? get workingPlaceReservation;
+  ReservationAndFloorDistribution?
+      get workingPlaceReservationAndFloorDistribution;
   @override
-  FloorDistribution? get workingPlace;
-  @override
-  Reservation? get parkingLotReservation;
-  @override
-  FloorDistribution? get parkingLot;
+  ReservationAndFloorDistribution?
+      get parkingLotReservationAndFloorDistribution;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

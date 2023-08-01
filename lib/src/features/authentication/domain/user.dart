@@ -14,19 +14,23 @@ class User with _$User {
     required String email,
     String? image,
     String? organizationLogo,
-    Reservation? workingPlaceReservation,
-    FloorDistribution? workingPlace,
-    Reservation? parkingLotReservation,
-    FloorDistribution? parkingLot,
+    ReservationAndFloorDistribution? workingPlaceReservationAndFloorDistribution,
+    ReservationAndFloorDistribution? parkingLotReservationAndFloorDistribution,
   }) = _User;
 
   Reservation? getReservationByFloorDistributionType(
       FloorDistributionType type) {
     if (type == FloorDistributionType.table) {
-      return workingPlaceReservation;
+      return workingPlaceReservationAndFloorDistribution?.reservation;
     } else if (type == FloorDistributionType.parkingLot) {
-      return parkingLotReservation;
+      return parkingLotReservationAndFloorDistribution?.reservation;
     }
     return null;
   }
+}
+
+class ReservationAndFloorDistribution{
+  ReservationAndFloorDistribution({required this.reservation, required this.floorDistribution});
+  Reservation reservation;
+  FloorDistribution floorDistribution;
 }

@@ -53,5 +53,7 @@
   "requestAcceptConfirmation": "Are you sure to accept the request?",
   "requestRejectConfirmation": "Are you sure to reject the request?",
   "reservationRequestAcceptedToast": "Acception successful",
-  "reservationRequestRejectedToast": "Rejection successful"
+  "reservationRequestRejectedToast": "Rejection successful",
+  "youSure": "Are you sure?",
+  "noReservation": "No Reservation"
 }

@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String _$LoggedInUserHash() => r'e5933c2e372cd4673a75d598055166f24dc500f6';
+String _$LoggedInUserHash() => r'c8116826ce3d5d9590f0f06228f4165c08ec3c2d';
 
 /// See also [LoggedInUser].
 final loggedInUserProvider = NotifierProvider<LoggedInUser, User?>(
