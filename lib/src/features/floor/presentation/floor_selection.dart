@@ -32,7 +32,7 @@ class FloorSelection extends ConsumerWidget {
                 },
               loading: () => const FloatingActionButton(onPressed: null, child: Icon(Icons.house_siding_rounded),)
           )
-              : const FloatingActionButton(onPressed: null, child: Icon(Icons.house_siding_rounded), materialTapTargetSize: MaterialTapTargetSize.padded,)
+              : const FloatingActionButton(onPressed: null, materialTapTargetSize: MaterialTapTargetSize.padded, child: Icon(Icons.house_siding_rounded),)
       );
   }
 

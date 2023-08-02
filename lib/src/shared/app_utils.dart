@@ -5,7 +5,6 @@ import 'package:aad_oauth/model/config.dart';
 import 'package:beseated/src/features/authentication/presentation/login_screen.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_screen.dart';
 import 'package:beseated/src/features/reservation/presentation/calendar_screen.dart';
-import 'package:beseated/src/features/reservation_request/presentation/assigned_reservation_requests.dart';
 import 'package:beseated/src/features/reservation_request/presentation/assigned_reservation_requests_badge.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_requests_screen.dart';
 import 'package:beseated/src/features/settings/presentation/settings_screen.dart';
@@ -198,6 +197,16 @@ extension DateTimeExtension on DateTime {
         return DateFormat('dd.MM.yyyy').format(this);
       default:
         return DateFormat('MM-dd-yyyy').format(this);
+    }
+  }
+
+  String toLocalTimeString(BuildContext context) {
+    String locale = Localizations.localeOf(context).languageCode;
+    switch (locale) {
+      case 'de':
+        return DateFormat('HH:mm:ss').format(this);
+      default:
+        return DateFormat('hh:mm:ss a').format(this);
     }
   }
 }

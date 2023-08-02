@@ -34,6 +34,9 @@ final reservationScreenTitleProvider = AutoDisposeStateProvider<String>((ref) {
   return 'BeSeated';
 });
 
+final lastTimeReloadedProvider = AutoDisposeStateProvider<AsyncValue<DateTime>>(
+    (ref) => const AsyncLoading());
+
 @riverpod
 class ReservationScreenController extends _$ReservationScreenController {
   final Set<int> previouslyFilledReservationProviders = {};
@@ -48,7 +51,7 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   @override
   FutureOr<bool> build() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _initalizeListeners();
     });
     return false;
@@ -64,7 +67,10 @@ class ReservationScreenController extends _$ReservationScreenController {
     _timer?.cancel();
     // Set Timer to reload Data every Minute
     _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
+      ref.read(lastTimeReloadedProvider.notifier).state = const AsyncLoading();
       await _getReservationsAndRequestsAndFillProvider(date);
+      ref.read(lastTimeReloadedProvider.notifier).state =
+          AsyncData(DateTime.now());
     });
   }
 
@@ -91,19 +97,25 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   Future<void> _getReservationsAndRequestsOnDateChange() async {
     var selectedDate = ref.read(selectedDateProvider);
-    await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(selectedDate);
+    await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(
+        selectedDate);
     ref.listen(selectedDateProvider, (previous, next) async {
-      await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(next);
+      await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(
+          next);
     });
   }
 
-  Future<void> _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(DateTime date) async {
-    await _getReservationsAndRequestsAndFillProvider(date);
+  Future<void>
+      _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(
+          DateTime date) async {
+    await _getReservationsAndRequestsAndFillProviderWithLoadingOverlay(date);
     _initalizeReloadTimer(date);
   }
 
   void _changeReservationsLoaded(bool value) {
     reservationsAndRequestsLoaded = value;
+    ref.read(lastTimeReloadedProvider.notifier).state =
+        value ? AsyncData(DateTime.now()) : const AsyncLoading();
     _updateState();
   }
 
@@ -130,8 +142,14 @@ class ReservationScreenController extends _$ReservationScreenController {
     });
   }
 
-  Future _getReservationsAndRequestsAndFillProvider(DateTime date) async {
+  Future _getReservationsAndRequestsAndFillProviderWithLoadingOverlay(
+      DateTime date) async {
     _changeReservationsLoaded(false);
+    await _getReservationsAndRequestsAndFillProvider(date);
+    _changeReservationsLoaded(true);
+  }
+
+  Future<void> _getReservationsAndRequestsAndFillProvider(DateTime date) async {
     final reservations = await ref
         .read(reservationServiceProvider)
         .getReservationsByDate(date: date);
@@ -139,7 +157,6 @@ class ReservationScreenController extends _$ReservationScreenController {
         .read(reservationRequestServiceProvider)
         .getOwnReservationRequestsByDate(date: date);
     await _fillProviders(reservations, requests);
-    _changeReservationsLoaded(true);
   }
 
   Future<void> _fillProviders(
@@ -191,10 +208,12 @@ class ReservationScreenController extends _$ReservationScreenController {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
           .getFloorDistributionById(id: reservation.roomId);
-      list.add(ReservationAndFloorDistribution(reservation: reservation, floorDistribution: floorDistribution));
+      list.add(ReservationAndFloorDistribution(
+          reservation: reservation, floorDistribution: floorDistribution));
     }
     ref
-        .read(loggedInUserProvider.notifier).changeOwnReservationAndFloorDistributions(list);
+        .read(loggedInUserProvider.notifier)
+        .changeOwnReservationAndFloorDistributions(list);
   }
 
   void _clearReservationRequestProviders(
@@ -207,7 +226,8 @@ class ReservationScreenController extends _$ReservationScreenController {
           .change(null);
     });
     previouslyFilledReservationRequestProviders.clear();
-    previouslyFilledReservationRequestProviders.addAll(requestedFloorDistributionIds);
+    previouslyFilledReservationRequestProviders
+        .addAll(requestedFloorDistributionIds);
   }
 
   void _clearReservationProviders(Set<int> reservedFloorDistributionIds) {
@@ -325,10 +345,14 @@ class ReservationScreenController extends _$ReservationScreenController {
       ref
           .read(loggedInUserProvider.notifier)
           .changeReservationAndFloorDistributionByType(
-          ReservationAndFloorDistribution(reservation: newReservation, floorDistribution: floorDistribution),
-          floorDistribution.type);
-      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
-          .reservationChangeSuccessToast);
+              ReservationAndFloorDistribution(
+                  reservation: newReservation,
+                  floorDistribution: floorDistribution),
+              floorDistribution.type);
+      AppUtils.showSuccessToast(
+          AppLocalizations.of(navigatorKey.currentContext!)!
+              .reservationChangeSuccessToast);
+      previouslyFilledReservationProviders.add(floorDistribution.id);
     }, onError: (_) => AppUtils.showErrorToast());
   }
 
@@ -347,14 +371,16 @@ class ReservationScreenController extends _$ReservationScreenController {
       ref
           .read(loggedInUserProvider.notifier)
           .changeReservationAndFloorDistributionByType(
-          ReservationAndFloorDistribution(reservation: newReservation, floorDistribution: floorDistribution),
-          floorDistribution.type
-      );
+              ReservationAndFloorDistribution(
+                  reservation: newReservation,
+                  floorDistribution: floorDistribution),
+              floorDistribution.type);
       _clearReservationRequestProviderAfterReservationOfFloorDistribution(
               floorDistribution)
           .then((value) => AppUtils.showSuccessToast(
               AppLocalizations.of(navigatorKey.currentContext!)!
                   .reservationSuccessToast));
+      previouslyFilledReservationProviders.add(floorDistribution.id);
     }, onError: (_) => AppUtils.showErrorToast());
   }
 
@@ -370,8 +396,9 @@ class ReservationScreenController extends _$ReservationScreenController {
                   reservationRequest.roomId)
               .notifier)
           .change(null);
-      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
-          .reservationRequestCancelationSuccessToast);
+      AppUtils.showSuccessToast(
+          AppLocalizations.of(navigatorKey.currentContext!)!
+              .reservationRequestCancelationSuccessToast);
     }, onError: (_) => AppUtils.showErrorToast());
   }
 
@@ -389,8 +416,10 @@ class ReservationScreenController extends _$ReservationScreenController {
               .notifier)
           .change(newReservationRequest);
       previouslyFilledReservationRequestProviders.add(floorDistribution.id);
-      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
-          .reservationRequestSuccessToast);
+      AppUtils.showSuccessToast(
+          AppLocalizations.of(navigatorKey.currentContext!)!
+              .reservationRequestSuccessToast);
+      previouslyFilledReservationRequestProviders.add(floorDistribution.id);
     }, onError: (_) => AppUtils.showErrorToast());
   }
 
