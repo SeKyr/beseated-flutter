@@ -15,6 +15,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/app_utils.dart';
 import '../../floor_distribution/presentation/floor_distribution_map.dart';
 import 'floating_action_button_column.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ReservationScreen extends ConsumerWidget {
   const ReservationScreen({super.key});
@@ -191,7 +193,8 @@ class ReservationScreen extends ConsumerWidget {
       WidgetRef ref, BuildContext context) {
     var onPressed = reservationAndFloorDistribution != null
         ? () => AppUtils.showConfirmDialog(
-            localTexts.youSure,
+            AppLocalizations.of(navigatorKey.currentContext!)!
+.youSure,
             () => ref
                 .read(reservationScreenControllerProvider.notifier)
                 .deleteReservation(reservationAndFloorDistribution.reservation,
@@ -213,7 +216,8 @@ class ReservationScreen extends ConsumerWidget {
           width: 115,
           child: Text(
             reservationAndFloorDistribution?.floorDistribution.name ??
-                localTexts.noReservation,
+                AppLocalizations.of(navigatorKey.currentContext!)!
+.noReservation,
             style: const TextStyle(fontSize: 13),
           ),
         ),

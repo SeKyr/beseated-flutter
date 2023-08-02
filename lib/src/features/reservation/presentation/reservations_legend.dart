@@ -4,6 +4,8 @@ import 'package:beseated/src/features/reservation_request/domain/reservation_req
 import 'package:beseated/src/shared/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../domain/reservation.dart';
 
@@ -47,7 +49,8 @@ class ReservationsLegend extends StatelessWidget {
         badgeColor: Colors.transparent
       ),
       child: const Icon(Icons.touch_app),
-    ), localTexts.quickAction));
+    ), AppLocalizations.of(navigatorKey.currentContext!)!
+.quickAction));
     return list;
   }
 
@@ -84,26 +87,31 @@ class ReservationsLegend extends StatelessWidget {
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution.copyWith(reservable: false),
         userEmail: "",
-        description: localTexts.notReservable));
+        description: AppLocalizations.of(navigatorKey.currentContext!)!
+.notReservable));
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution,
         userEmail: "",
-        description: localTexts.notReserved));
+        description: AppLocalizations.of(navigatorKey.currentContext!)!
+.notReserved));
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution,
         reservation: reservation,
         userEmail: "",
-        description: localTexts.reserved));
+        description: AppLocalizations.of(navigatorKey.currentContext!)!
+.reserved));
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution,
         reservation: reservation,
         userEmail: "max.mustermann@company.domain",
-        description: localTexts.selfReserved));
+        description: AppLocalizations.of(navigatorKey.currentContext!)!
+.selfReserved));
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution,
         reservationRequest: reservationRequest,
         userEmail: "max.mustermann@company.domain",
-        description: localTexts.requested));
+        description: AppLocalizations.of(navigatorKey.currentContext!)!
+.requested));
     return list;
   }
 

@@ -259,8 +259,10 @@ class ReservationScreenController extends _$ReservationScreenController {
         reserveFloorDistribution(floorDistribution: floorDistribution);
         break;
       case ReservationProcessState.requestable:
-        var content = localTexts.confirmReservationRequestDescription(
-            floorDistribution.type.getLocalizedName(localTexts));
+        var content = AppLocalizations.of(navigatorKey.currentContext!)!
+.confirmReservationRequestDescription(
+            floorDistribution.type.getLocalizedName(AppLocalizations.of(navigatorKey.currentContext!)!
+));
         AppUtils.showConfirmDialog(
             content,
             () =>
@@ -281,8 +283,10 @@ class ReservationScreenController extends _$ReservationScreenController {
         break;
       case ReservationProcessState.requestableButOwnReservationOnAnother:
         var content =
-            localTexts.confirmReservationRequestDeletsOwnReservationDescription(
-                floorDistribution.type.getLocalizedName(localTexts));
+            AppLocalizations.of(navigatorKey.currentContext!)!
+.confirmReservationRequestDeletsOwnReservationDescription(
+                floorDistribution.type.getLocalizedName(AppLocalizations.of(navigatorKey.currentContext!)!
+));
         AppUtils.showConfirmDialog(content,
             () => _deleteOwnReservationToRequestOther(user, floorDistribution));
         break;

@@ -10,6 +10,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/authentication/presentation/logged_in_user.dart';
 
 import '../app_utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
@@ -83,7 +85,8 @@ class CustomDrawer extends ConsumerWidget {
       },
       leading: const Icon(Icons.assignment),
       title: AssignedReservationRequestsBadge(
-          child: Text(localTexts.reservationRequests,)),
+          child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.reservationRequests,)),
     );
   }
 
@@ -97,7 +100,8 @@ class CustomDrawer extends ConsumerWidget {
                 child: ListTile(
                   onTap: () => _logout(ref, context),
                   leading: const Icon(Icons.logout),
-                  title: Text(localTexts.logout),
+                  title: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.logout),
                 ),
               ),
               Expanded(
@@ -107,7 +111,8 @@ class CustomDrawer extends ConsumerWidget {
                     rootScaffoldKey.currentState!.closeDrawer();
                   },
                   leading: const Icon(Icons.settings),
-                  title: Text(localTexts.settings),
+                  title: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.settings),
                 ),
               ),
             ],

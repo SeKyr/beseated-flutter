@@ -64,7 +64,8 @@ class LoginScreen extends ConsumerWidget {
                   width: widthPerSizedBox,
                   height: heightPerSizedBox,
                   child: Center(
-                    child: Text(localTexts.welcome, style: textStyle),
+                    child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.welcome, style: textStyle),
                   ),
                 ),
                 SizedBox(
@@ -80,7 +81,8 @@ class LoginScreen extends ConsumerWidget {
                 SizedBox(
                   width: widthPerSizedBox,
                   height: heightPerSizedBox,
-                  child: Center(child: Text(localTexts.to, style: textStyle)),
+                  child: Center(child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.to, style: textStyle)),
                 )
               ],
             ),

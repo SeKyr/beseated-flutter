@@ -22,9 +22,6 @@ final rootScaffoldKey = GlobalKey<ScaffoldState>();
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
 
-final localTexts = AppLocalizations.of(navigatorKey.currentContext!)!;
-
-final globalTheme = Theme.of(navigatorKey.currentContext!);
 
 class AppUtils {
   static String get beSeatedApiUrl {
@@ -139,7 +136,8 @@ class AppUtils {
         context: navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(localTexts.pleaseConfirm),
+            title: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.pleaseConfirm),
             content: Text(content),
             actions: [
               // The "Yes" button
@@ -149,13 +147,15 @@ class AppUtils {
                     // Close the dialog
                     Navigator.of(context).pop();
                   },
-                  child: Text(localTexts.yesLarge)),
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.yesLarge)),
               TextButton(
                   onPressed: () {
                     // Close the dialog
                     Navigator.of(context).pop();
                   },
-                  child: Text(localTexts.noLarge))
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.noLarge))
             ],
           );
         });
@@ -181,6 +181,7 @@ class AppUtils {
       toastDuration: const Duration(seconds: 1, milliseconds: 500),
     ).show(navigatorKey.currentContext!);
   }
+  
 }
 
 extension StringExtension on String {

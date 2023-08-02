@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../floor_distribution/application/floor_distribution_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 part 'reservation_request_screen_controller.g.dart';
 
@@ -53,18 +55,22 @@ class ReservationRequestScreenController extends _$ReservationRequestScreenContr
   }
 
   void acceptReservationRequest(int id) {
-    AppUtils.showConfirmDialog(localTexts.requestAcceptConfirmation, () async {
+    AppUtils.showConfirmDialog(AppLocalizations.of(navigatorKey.currentContext!)!
+.requestAcceptConfirmation, () async {
       ref.read(reservationRequestServiceProvider).acceptReservationRequest(id: id).then((value) {
-        AppUtils.showSuccessToast(localTexts.reservationRequestAcceptedToast);
+        AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+.reservationRequestAcceptedToast);
           reloadReservationRequestsAfterChange();
     }, onError: (_) => AppUtils.showErrorToast());
     });
   }
 
   void rejectReservationRequest(int id) {
-    AppUtils.showConfirmDialog(localTexts.requestRejectConfirmation, () async {
+    AppUtils.showConfirmDialog(AppLocalizations.of(navigatorKey.currentContext!)!
+.requestRejectConfirmation, () async {
       ref.read(reservationRequestServiceProvider).rejectReservationRequest(id: id).then((value) {
-      AppUtils.showSuccessToast(localTexts.reservationRequestRejectedToast);
+      AppUtils.showSuccessToast(AppLocalizations.of(navigatorKey.currentContext!)!
+.reservationRequestRejectedToast);
       reloadReservationRequestsAfterChange();
     }, onError: (_) => AppUtils.showErrorToast());
     });

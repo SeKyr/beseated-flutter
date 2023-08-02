@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../domain/reservation_request.dart';
 
@@ -16,7 +18,8 @@ class ReservationRequestsScreen extends ConsumerWidget {
     return Scaffold(
         appBar: AppUtils.getAppBar(
             title: Text(
-          localTexts.reservationRequests,
+          AppLocalizations.of(navigatorKey.currentContext!)!
+.reservationRequests,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onBackground,
           ),
@@ -37,7 +40,8 @@ class ReservationRequestsScreen extends ConsumerWidget {
                 columnSpacing: 12,
                 horizontalMargin: 12,
                 minWidth: 1000,
-                empty: Text(localTexts.noOpenRequests),
+                empty: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.noOpenRequests),
                 columns: _getColumns(),
                 rows: _getRows(reservationRequestsWithFloorDistributionNames, ref)),
           );
@@ -49,18 +53,25 @@ class ReservationRequestsScreen extends ConsumerWidget {
   List<DataColumn2> _getColumns() {
     return [
       DataColumn2(
-        label: Text(localTexts.id),
+        label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.id),
       ),
       DataColumn2(
-        label: Text(localTexts.floorDistribution),
+        label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.floorDistribution),
       ),
-      DataColumn2(label: Text(localTexts.date), size: ColumnSize.S),
-      DataColumn2(label: Text(localTexts.begin), size: ColumnSize.S),
-      DataColumn2(label: Text(localTexts.end), size: ColumnSize.S),
+      DataColumn2(label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.date), size: ColumnSize.S),
+      DataColumn2(label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.begin), size: ColumnSize.S),
+      DataColumn2(label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.end), size: ColumnSize.S),
       DataColumn2(
-        label: Text(localTexts.person),
+        label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.person),
       ),
-      DataColumn2(label: Text(localTexts.action), size: ColumnSize.M),
+      DataColumn2(label: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+.action), size: ColumnSize.M),
     ];
   }
 
