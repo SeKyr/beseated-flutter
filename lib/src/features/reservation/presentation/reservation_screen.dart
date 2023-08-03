@@ -122,22 +122,10 @@ class ReservationScreen extends ConsumerWidget {
         return BottomAppBar(
             child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
           children: [
               Expanded(
             child: SizedBox(height: 48,
-            child:  Align(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _getOwnReservationDisplay(Icons.desktop_windows,
-                      user.workingPlaceReservationAndFloorDistribution, ref, context),
-                  _getOwnReservationDisplay(Icons.local_parking,
-                      user.parkingLotReservationAndFloorDistribution, ref, context),
-                ],
-              ),),
+            child: _bottomAppBarScrollable(ref, context, user)
             )),
             CustomPopupMenu(
                 arrowColor: Theme.of(context).colorScheme.background,
@@ -157,6 +145,40 @@ class ReservationScreen extends ConsumerWidget {
           ],
         ));
       },
+    );
+  }
+
+  Widget _bottomAppBarNotScrollable(WidgetRef ref, BuildContext context, User user) {
+    return LayoutBuilder(builder: (context, constraints) {
+      var size = constraints.maxWidth / 2;
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _getOwnReservationDisplay(Icons.desktop_windows,
+              user.workingPlaceReservationAndFloorDistribution, ref, context, size: size),
+          _getOwnReservationDisplay(Icons.local_parking,
+              user.parkingLotReservationAndFloorDistribution, ref, context, size: size),
+        ],
+      );
+    },);
+  }
+
+  Widget _bottomAppBarScrollable(WidgetRef ref, BuildContext context, User user) {
+    return Center(
+      child:  SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _getOwnReservationDisplay(Icons.desktop_windows,
+                user.workingPlaceReservationAndFloorDistribution, ref, context),
+            _getOwnReservationDisplay(Icons.local_parking,
+                user.parkingLotReservationAndFloorDistribution, ref, context),
+          ],
+        ),
+      ),
     );
   }
 
@@ -212,7 +234,7 @@ class ReservationScreen extends ConsumerWidget {
   Widget _getOwnReservationDisplay(
       IconData iconData,
       ReservationAndFloorDistribution? reservationAndFloorDistribution,
-      WidgetRef ref, BuildContext context) {
+      WidgetRef ref, BuildContext context, {double? size}) {
     var onPressed = reservationAndFloorDistribution != null
         ? () => AppUtils.showConfirmDialog(
             AppLocalizations.of(navigatorKey.currentContext!)!
@@ -227,20 +249,21 @@ class ReservationScreen extends ConsumerWidget {
       children: [
         Icon(
           iconData,
-          size: 13,
           color: onPressed == null ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary,
         ),
         const SizedBox(
           width: 2,
           height: 0,
         ),
-        SizedBox(
-          width: 80,
+        Container(
+          constraints: size != null ? BoxConstraints(maxWidth: size - 4 - 24 - 48) : null,
           child: Text(
             reservationAndFloorDistribution?.floorDistribution.name ??
                 AppLocalizations.of(navigatorKey.currentContext!)!
 .noReservation,
-            style: const TextStyle(fontSize: 8),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize:10),
           ),
         ),
         const SizedBox(
@@ -252,7 +275,6 @@ class ReservationScreen extends ConsumerWidget {
           icon: const Icon(
             Icons.delete,
           ),
-          iconSize: 13,
           color: Theme.of(context).colorScheme.primary,
           disabledColor: Theme.of(context).disabledColor,
         )
