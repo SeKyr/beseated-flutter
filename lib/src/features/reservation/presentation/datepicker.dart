@@ -17,30 +17,48 @@ class Datepicker extends ConsumerWidget {
     return Container(
       padding: EdgeInsetsDirectional.only(top: 5),
       child: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          var date = ref.read(selectedDateProvider);
+          if (details.primaryVelocity! > 0) {
+            // swipe left to right
+            date = date.subtract(const Duration(days: 1));
+          } else {
+            // swipe right to left
+            date = date.add(const Duration(days: 1));
+          }
+          ref.read(selectedDateProvider.notifier).change(date);
+        },
         onTap: () {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
             return const DatepickerPopupCard();
           }, settings: const RouteSettings()));
         },
-        child: Hero(
-          tag: _heroDatepicker,
-          createRectTween: (begin, end) {
-            return CustomRectTween(begin: begin!, end: end!);
-          },
-          child: Material(
-            elevation: 6,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            child: const SizedBox(
-              width: 56,
-              height: 56,
-              child: Icon(Icons.calendar_today_rounded),
+        child: SizedBox(
+            width: 65,
+            height: 65,
+            child: FloatingActionButton(
+              heroTag: _heroDatepicker,
+              onPressed: null,
+              child: _getIcon(65)
             ),
-          ),
+          )
         ),
-      ),
+    );
+  }
+
+  Widget _getIcon(double size) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.arrow_left, size: size * 0.3),
+        Icon(Icons.calendar_today_rounded, size: size * 0.4,),
+        Icon(Icons.arrow_right, size: size * 0.3,),
+      ],
     );
   }
 }
+
+
 
 const String _heroDatepicker = 'datepicker-hero';
 
@@ -72,6 +90,7 @@ class DatepickerPopupCard extends ConsumerWidget {
                 initialSelectedDate: date,
                 initialDisplayDate: date,
                 showNavigationArrow: true,
+                monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
               )
             ),
           ),
