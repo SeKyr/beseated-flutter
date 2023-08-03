@@ -55,6 +55,7 @@ dependencies:
   custom_pop_up_menu: ^1.2.4
   badges: ^3.1.1
   data_table_2: ^2.5.6
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

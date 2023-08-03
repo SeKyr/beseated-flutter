@@ -11,6 +11,7 @@ import 'package:beseated/src/shared/ui/notifiable_loading_overlay_view.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../shared/app_utils.dart';
 import '../../floor_distribution/presentation/floor_distribution_map.dart';
@@ -45,6 +46,34 @@ class ReservationScreen extends ConsumerWidget {
           body: Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).colorScheme.background,
+              centerTitle: true,
+              title: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _getDateDisplay(),
+                      const SizedBox(height: 10,),
+                      _getFloorDisplay(),
+                    ],
+                  ),
+                  const SizedBox(width: 15,),
+                  Icon(Icons.desktop_windows_outlined, size: 15, color: Theme.of(context).colorScheme.onBackground,),
+                  const SizedBox(width: 2,),
+                  CircularPercentIndicator(radius: 25.0, percent: 0.7, center: const Text("7/10", style: TextStyle(fontSize: 8),)),
+                  const SizedBox(width: 5,),
+                  Icon(Icons.local_parking, size: 15, color: Theme.of(context).colorScheme.onBackground,),
+                  const SizedBox(width: 2,),
+                  CircularPercentIndicator(radius: 25.0, percent: 0.7, center: const Text("7/10", style: TextStyle(fontSize: 8))),
+                ],
+              ),
+/*              actions: [
+                _getLastReloadedDisplay()
+
+              ],*/
             ),
             body: FloorDistributionMap(
               floorDistributionsProvider:
@@ -92,28 +121,24 @@ class ReservationScreen extends ConsumerWidget {
         var user = ref.watch(loggedInUserProvider)!;
         return BottomAppBar(
             child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _getOwnReservationDisplay(Icons.desktop_windows,
-                    user.workingPlaceReservationAndFloorDistribution, ref, context),
-                _getOwnReservationDisplay(Icons.local_parking,
-                    user.parkingLotReservationAndFloorDistribution, ref, context),
-              ],
-            ),
-            const Spacer(),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _getDateDisplay(),
-                const SizedBox(height: 10,),
-                _getFloorDisplay(),
-                const SizedBox(height: 10,),
-                _getLastReloadedDisplay(),
-              ],
-            ),
+              Expanded(
+            child: SizedBox(height: 48,
+            child:  Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _getOwnReservationDisplay(Icons.desktop_windows,
+                      user.workingPlaceReservationAndFloorDistribution, ref, context),
+                  _getOwnReservationDisplay(Icons.local_parking,
+                      user.parkingLotReservationAndFloorDistribution, ref, context),
+                ],
+              ),),
+            )),
             CustomPopupMenu(
                 arrowColor: Theme.of(context).colorScheme.background,
                 position: PreferredPosition.top,
@@ -161,13 +186,13 @@ class ReservationScreen extends ConsumerWidget {
         var lastTimeReloaded = ref.watch(lastTimeReloadedProvider);
         var text = lastTimeReloaded.isLoading ? "" : lastTimeReloaded.value!.toLocalTimeString(context);
         return _getIconWithText(
-            iconData: Icons.refresh, text: text, loading: lastTimeReloaded.isLoading);
+            iconData: Icons.refresh, text: text, loading: lastTimeReloaded.isLoading, textWidth: 60);
       },
     );
   }
 
-  Widget _getIconWithText({required IconData iconData, required String text, bool loading = false} ) {
-    var iconToShow = loading ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(),): Icon(iconData, size: 15,);
+  Widget _getIconWithText({required IconData iconData, required String text, bool loading = false, double textWidth = 100}) {
+    var iconToShow = loading ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(),): Icon(iconData, size: 15, color: Theme.of(navigatorKey.currentContext!).colorScheme.onBackground,);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -176,13 +201,10 @@ class ReservationScreen extends ConsumerWidget {
           width: 2,
           height: 0,
         ),
-        SizedBox(
-          width: 100,
-          child: Text(
+        Text(
             text,
-            style: const TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 13, color: Theme.of(navigatorKey.currentContext!).colorScheme.onBackground),
           ),
-        ),
       ],
     );
   }
@@ -205,7 +227,7 @@ class ReservationScreen extends ConsumerWidget {
       children: [
         Icon(
           iconData,
-          size: 15,
+          size: 13,
           color: onPressed == null ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary,
         ),
         const SizedBox(
@@ -213,12 +235,12 @@ class ReservationScreen extends ConsumerWidget {
           height: 0,
         ),
         SizedBox(
-          width: 115,
+          width: 80,
           child: Text(
             reservationAndFloorDistribution?.floorDistribution.name ??
                 AppLocalizations.of(navigatorKey.currentContext!)!
 .noReservation,
-            style: const TextStyle(fontSize: 13),
+            style: const TextStyle(fontSize: 8),
           ),
         ),
         const SizedBox(
@@ -230,7 +252,7 @@ class ReservationScreen extends ConsumerWidget {
           icon: const Icon(
             Icons.delete,
           ),
-          iconSize: 15,
+          iconSize: 13,
           color: Theme.of(context).colorScheme.primary,
           disabledColor: Theme.of(context).disabledColor,
         )
