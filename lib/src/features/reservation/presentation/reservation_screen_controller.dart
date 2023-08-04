@@ -54,6 +54,7 @@ class ReservationScreenController extends _$ReservationScreenController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initalizeListeners();
     });
+    ref.onDispose(() => _timer?.cancel());
     return false;
   }
 
@@ -68,9 +69,11 @@ class ReservationScreenController extends _$ReservationScreenController {
     // Set Timer to reload Data every Minute
     _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
       ref.read(lastTimeReloadedProvider.notifier).state = const AsyncLoading();
-      await _getReservationsAndRequestsAndFillProvider(date);
-      ref.read(lastTimeReloadedProvider.notifier).state =
-          AsyncData(DateTime.now());
+      if(date == ref.read(selectedDateProvider)) {
+        await _getReservationsAndRequestsAndFillProvider(date);
+        ref.read(lastTimeReloadedProvider.notifier).state =
+            AsyncData(DateTime.now());
+      }
     });
   }
 
@@ -96,7 +99,8 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   Future<void> _getReservationsAndRequestsOnDateChange() async {
-    var selectedDate = ref.read(selectedDateProvider);
+    var selectedDate = ref.read(selectedDateProvider);      ref.read(lastTimeReloadedProvider.notifier).state =
+        AsyncData(DateTime.now());
     await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(
         selectedDate);
     ref.listen(selectedDateProvider, (previous, next) async {

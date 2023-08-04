@@ -15,6 +15,7 @@ class AssignedReservationRequests extends _$AssignedReservationRequests {
   List<ReservationRequest> build() {
     _getAssignedReservationRequests();
     _startReloadTimer();
+    ref.onDispose(() => _timer?.cancel());
     return List.empty();
   }
 
