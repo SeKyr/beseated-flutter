@@ -125,7 +125,7 @@ class ReservationScreen extends ConsumerWidget {
           children: [
               Expanded(
             child: SizedBox(height: 48,
-            child: _bottomAppBarScrollable(ref, context, user)
+            child: _bottomAppBarBodyNotScrollable(ref, context, user)
             )),
             CustomPopupMenu(
                 arrowColor: Theme.of(context).colorScheme.background,
@@ -148,7 +148,7 @@ class ReservationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _bottomAppBarNotScrollable(WidgetRef ref, BuildContext context, User user) {
+  Widget _bottomAppBarBodyNotScrollable(WidgetRef ref, BuildContext context, User user) {
     return LayoutBuilder(builder: (context, constraints) {
       var size = constraints.maxWidth / 2;
       return Row(
@@ -163,23 +163,6 @@ class ReservationScreen extends ConsumerWidget {
         ],
       );
     },);
-  }
-
-  Widget _bottomAppBarScrollable(WidgetRef ref, BuildContext context, User user) {
-    return Center(
-      child:  SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _getOwnReservationDisplay(Icons.desktop_windows,
-                user.workingPlaceReservationAndFloorDistribution, ref, context),
-            _getOwnReservationDisplay(Icons.local_parking,
-                user.parkingLotReservationAndFloorDistribution, ref, context),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _getDateDisplay() {
