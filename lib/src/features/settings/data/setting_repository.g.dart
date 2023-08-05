@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'assigned_reservation_requests.dart';
+part of 'setting_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -29,23 +29,14 @@ class _SystemHash {
   }
 }
 
-String _$AssignedReservationRequestsHash() =>
-    r'57a7aea37ae53aba6ff95d535aacb0ffa14a37f2';
+String _$settingRepositoryHash() => r'37db9a419a09d3eb9111caf2b2cc1a1a6b0ffc25';
 
-/// See also [AssignedReservationRequests].
-final assignedReservationRequestsProvider = AutoDisposeNotifierProvider<
-    AssignedReservationRequests, List<ReservationRequest>>(
-  AssignedReservationRequests.new,
-  name: r'assignedReservationRequestsProvider',
+/// See also [settingRepository].
+final settingRepositoryProvider = AutoDisposeProvider<SettingRepository>(
+  settingRepository,
+  name: r'settingRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$AssignedReservationRequestsHash,
+      : _$settingRepositoryHash,
 );
-typedef AssignedReservationRequestsRef
-    = AutoDisposeNotifierProviderRef<List<ReservationRequest>>;
-
-abstract class _$AssignedReservationRequests
-    extends AutoDisposeNotifier<List<ReservationRequest>> {
-  @override
-  List<ReservationRequest> build();
-}
+typedef SettingRepositoryRef = AutoDisposeProviderRef<SettingRepository>;

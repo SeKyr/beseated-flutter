@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:beseated/src/features/authentication/domain/user.dart';
 import 'package:beseated/src/features/authentication/presentation/logged_in_user.dart';
 import 'package:beseated/src/features/floor/presentation/selected_floor.dart';
+import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/features/floor_distribution/presentation/selected_floor_distribution.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_screen_controller.dart';
 import 'package:beseated/src/features/reservation/presentation/reservations_legend.dart';
@@ -61,13 +62,7 @@ class ReservationScreen extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(width: 15,),
-                  Icon(Icons.desktop_windows_outlined, size: 15, color: Theme.of(context).colorScheme.onBackground,),
-                  const SizedBox(width: 2,),
-                  CircularPercentIndicator(radius: 25.0, percent: 0.7, center: const Text("7/10", style: TextStyle(fontSize: 8),)),
-                  const SizedBox(width: 5,),
-                  Icon(Icons.local_parking, size: 15, color: Theme.of(context).colorScheme.onBackground,),
-                  const SizedBox(width: 2,),
-                  CircularPercentIndicator(radius: 25.0, percent: 0.7, center: const Text("7/10", style: TextStyle(fontSize: 8))),
+                  _getUtilizationWidgets()
                 ],
               ),
 /*              actions: [
@@ -91,6 +86,60 @@ class ReservationScreen extends ConsumerWidget {
           floatingActionButton: const FloatingActionButtonColumn(),
           bottomNavigationBar: _getBottomAppBar(),
         ));
+  }
+
+  Widget _getUtilizationWidgets() {
+    return Consumer(builder: (context, ref, __) {
+      var details = ref.watch(reservationScreenUtilizationWidgetDetailsProvider);
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.desktop_windows_outlined, size: 15, color: Theme.of(context).colorScheme.onBackground,),
+          const SizedBox(width: 2,),
+          _getUtilizationWidget(details, FloorDistributionType.table),
+          const SizedBox(width: 5,),
+          Icon(Icons.local_parking, size: 15, color: Theme.of(context).colorScheme.onBackground,),
+          const SizedBox(width: 2,),
+          _getUtilizationWidget(details, FloorDistributionType.parkingLot),
+        ],
+      );
+    },);
+  }
+
+  Widget _getUtilizationWidget(UtilizationWidgetDetails details, FloorDistributionType type) {
+    var actual = 0;
+     int? max;
+    if (type == FloorDistributionType.parkingLot) {
+      actual = details.parkingLotActual;
+      max = details.parkingLotMax;
+    } else if (type == FloorDistributionType.table) {
+      actual = details.workingPlaceActual;
+      max = details.workingPlaceMax;
+    }
+
+    double percent = max != null ? actual / max : 0;
+
+    Color progressColor = details.firstStageColor;
+
+    if (percent >= details.firstBorder) {
+      if (percent >= details.secondBorder) {
+        progressColor = details.thirdStageColor;
+      } else {
+        progressColor = details.secondStageColor;
+      }
+    }
+
+    return CircularPercentIndicator(
+        radius: 25.0,
+        percent: percent,
+        center: Text(
+            max != null ? "$actual/$max": "$actual",
+            style: const TextStyle(fontSize: 8)
+        ),
+        progressColor: progressColor,
+      backgroundColor: details.backgroundColor,
+    );
+
   }
 
   Widget _getAnimatedTitle(WidgetRef ref) {
@@ -135,10 +184,10 @@ class ReservationScreen extends ConsumerWidget {
                   return const ReservationsLegend();
                 },
                 pressType: PressType.singleClick,
-                child: const IconButton(
+                child: IconButton(
                   icon: Icon(
                     Icons.help_outline_rounded,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                   onPressed: null,
                 ))

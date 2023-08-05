@@ -30,7 +30,7 @@ class _SystemHash {
 }
 
 String _$ReservationRequestScreenControllerHash() =>
-    r'c020b4a78f799270f3fd5b8de27e5be304802d90';
+    r'1d731ead03384308b01300cf05c3a70854a804ab';
 
 /// See also [ReservationRequestScreenController].
 final reservationRequestScreenControllerProvider =

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:beseated/src/features/floor_distribution/application/floor_distribution_service.dart';
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
@@ -8,7 +9,8 @@ import 'package:beseated/src/features/reservation/presentation/reservation_proce
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
 import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:beseated/src/features/settings/domain/setting.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,6 +19,7 @@ import '../../authentication/domain/user.dart';
 import '../../authentication/presentation/logged_in_user.dart';
 import '../../floor/presentation/selected_floor.dart';
 import '../../reservation_request/domain/reservation_request.dart';
+import '../../settings/application/setting_service.dart';
 import '../application/reservation_service.dart';
 import '../domain/reservation.dart';
 
@@ -37,6 +40,13 @@ final reservationScreenTitleProvider = AutoDisposeStateProvider<String>((ref) {
 final lastTimeReloadedProvider = AutoDisposeStateProvider<AsyncValue<DateTime>>(
     (ref) => const AsyncLoading());
 
+final reservationScreenUtilizationWidgetDetailsProvider =
+AutoDisposeStateProvider<UtilizationWidgetDetails>((ref) {
+  return UtilizationWidgetDetails(workingPlaceActual: 0, parkingLotActual: 0);
+});
+
+
+
 @riverpod
 class ReservationScreenController extends _$ReservationScreenController {
   final Set<int> previouslyFilledReservationProviders = {};
@@ -49,16 +59,19 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   Location? location;
 
+  Map<String, String> settings = {};
+
   @override
   FutureOr<bool> build() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initalizeListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initalizeListeners();
     });
     ref.onDispose(() => _timer?.cancel());
     return false;
   }
 
-  void _initalizeListeners() {
+  Future<void> _initalizeListeners() async {
+    settings = await ref.read(settingServiceProvider).getAllAsMap();
     _getReservationsAndRequestsOnDateChange();
     _getFloorDistributionsOnFloorChange();
     _updateLocationOnChange();
@@ -99,7 +112,8 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   Future<void> _getReservationsAndRequestsOnDateChange() async {
-    var selectedDate = ref.read(selectedDateProvider);      ref.read(lastTimeReloadedProvider.notifier).state =
+    var selectedDate = ref.read(selectedDateProvider);
+    ref.read(lastTimeReloadedProvider.notifier).state =
         AsyncData(DateTime.now());
     await _getReservationsAndRequestsAndFillProviderAndInitalizeReloadInterval(
         selectedDate);
@@ -179,6 +193,8 @@ class ReservationScreenController extends _$ReservationScreenController {
             ref.read(loggedInUserProvider)!.email.toLowerCase())
         .toList());
 
+    await _fillUtilizationWidgetDetailsProvier(reservations);
+
     for (var request in requests) {
       ref
           .read(reservationRequestByFloorDistributionProvider(request.roomId)
@@ -186,6 +202,31 @@ class ReservationScreenController extends _$ReservationScreenController {
           .change(request);
     }
     _clearReservationRequestProviders(requests.map((r) => r.roomId).toSet());
+  }
+
+  Future<void> _fillUtilizationWidgetDetailsProvier(List<Reservation> reservations) async {
+    int reservationCountWorkingDesk = 0;
+    int reservationCountParkingLot = 0;
+    for (var reservation in reservations) {
+      var floorDistribution = await ref
+          .read(floorDistributionServiceProvider)
+          .getFloorDistributionById(id: reservation.roomId);
+      if(floorDistribution.type == FloorDistributionType.table) {
+        reservationCountWorkingDesk++;
+      } else if(floorDistribution.type == FloorDistributionType.parkingLot) {
+        reservationCountParkingLot++;
+      }
+    }
+    var utilizationWidgetDetails = UtilizationWidgetDetails(workingPlaceActual: reservationCountWorkingDesk, parkingLotActual: reservationCountParkingLot, parkingLotMax: int.tryParse(settings[Settings.maxParking] ?? ""), workingPlaceMax: int.tryParse(settings[Settings.maxPeople] ?? ""));
+    var firstBorder = double.tryParse(settings[Settings.firstBorder] ?? "");
+    var secondBorder = double.tryParse(settings[Settings.secondBorder] ?? "");
+    if (firstBorder != null) {
+      utilizationWidgetDetails.firstBorder = firstBorder;
+    }
+    if (secondBorder != null) {
+      utilizationWidgetDetails.secondBorder = secondBorder;
+    }
+    ref.read(reservationScreenUtilizationWidgetDetailsProvider.notifier).state = utilizationWidgetDetails;
   }
 
   Future<void>
@@ -454,4 +495,27 @@ class ReservationScreenController extends _$ReservationScreenController {
         startdate: startdate,
         enddate: enddate);
   }
+}
+
+class UtilizationWidgetDetails {
+
+  UtilizationWidgetDetails({
+    this.workingPlaceMax,
+    required this.workingPlaceActual,
+    this.parkingLotMax,
+    required this.parkingLotActual,
+    this.firstBorder = 0.5,
+    this.secondBorder = 0.7,
+  });
+
+  int? workingPlaceMax;
+  int workingPlaceActual;
+  int? parkingLotMax;
+  int parkingLotActual;
+  double firstBorder;
+  double secondBorder;
+  Color firstStageColor = Colors.green;
+  Color secondStageColor = Colors.orange;
+  Color thirdStageColor = Colors.red;
+  Color backgroundColor = Colors.grey;
 }
