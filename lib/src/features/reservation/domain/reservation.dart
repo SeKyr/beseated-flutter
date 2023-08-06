@@ -10,10 +10,12 @@ class Reservation with _$Reservation {
   const Reservation._();
   factory Reservation({
   required String email,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'roomId') required int floorDistributionId,
     int? id,
   required DateTime startdate,
   required DateTime enddate,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'seriesObject')Series? series,
   }) = _Reservation;
 
