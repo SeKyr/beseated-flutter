@@ -16,7 +16,7 @@ class Reservation with _$Reservation {
   required DateTime startdate,
   required DateTime enddate,
     // ignore: invalid_annotation_target
-    @JsonKey(name: 'seriesObject')Series? series,
+    @JsonKey(name: 'seriesObject') Series? series,
   }) = _Reservation;
 
   factory Reservation.fromJson(Map<String, dynamic> json) => _$ReservationFromJson(json);

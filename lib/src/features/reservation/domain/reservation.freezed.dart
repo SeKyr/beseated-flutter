@@ -20,12 +20,16 @@ Reservation _$ReservationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Reservation {
-  String get email => throw _privateConstructorUsedError;
-  int get roomId => throw _privateConstructorUsedError;
+  String get email =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(name: 'roomId')
+  int get floorDistributionId => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
   DateTime get startdate => throw _privateConstructorUsedError;
-  DateTime get enddate => throw _privateConstructorUsedError;
-  Series? get seriesObject => throw _privateConstructorUsedError;
+  DateTime get enddate =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(name: 'seriesObject')
+  Series? get series => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,13 +45,13 @@ abstract class $ReservationCopyWith<$Res> {
   @useResult
   $Res call(
       {String email,
-      int roomId,
+      @JsonKey(name: 'roomId') int floorDistributionId,
       int? id,
       DateTime startdate,
       DateTime enddate,
-      Series? seriesObject});
+      @JsonKey(name: 'seriesObject') Series? series});
 
-  $SeriesCopyWith<$Res>? get seriesObject;
+  $SeriesCopyWith<$Res>? get series;
 }
 
 /// @nodoc
@@ -64,20 +68,20 @@ class _$ReservationCopyWithImpl<$Res, $Val extends Reservation>
   @override
   $Res call({
     Object? email = null,
-    Object? roomId = null,
+    Object? floorDistributionId = null,
     Object? id = freezed,
     Object? startdate = null,
     Object? enddate = null,
-    Object? seriesObject = freezed,
+    Object? series = freezed,
   }) {
     return _then(_value.copyWith(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      roomId: null == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
+      floorDistributionId: null == floorDistributionId
+          ? _value.floorDistributionId
+          : floorDistributionId // ignore: cast_nullable_to_non_nullable
               as int,
       id: freezed == id
           ? _value.id
@@ -91,22 +95,22 @@ class _$ReservationCopyWithImpl<$Res, $Val extends Reservation>
           ? _value.enddate
           : enddate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      seriesObject: freezed == seriesObject
-          ? _value.seriesObject
-          : seriesObject // ignore: cast_nullable_to_non_nullable
+      series: freezed == series
+          ? _value.series
+          : series // ignore: cast_nullable_to_non_nullable
               as Series?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $SeriesCopyWith<$Res>? get seriesObject {
-    if (_value.seriesObject == null) {
+  $SeriesCopyWith<$Res>? get series {
+    if (_value.series == null) {
       return null;
     }
 
-    return $SeriesCopyWith<$Res>(_value.seriesObject!, (value) {
-      return _then(_value.copyWith(seriesObject: value) as $Val);
+    return $SeriesCopyWith<$Res>(_value.series!, (value) {
+      return _then(_value.copyWith(series: value) as $Val);
     });
   }
 }
@@ -121,14 +125,14 @@ abstract class _$$_ReservationCopyWith<$Res>
   @useResult
   $Res call(
       {String email,
-      int roomId,
+      @JsonKey(name: 'roomId') int floorDistributionId,
       int? id,
       DateTime startdate,
       DateTime enddate,
-      Series? seriesObject});
+      @JsonKey(name: 'seriesObject') Series? series});
 
   @override
-  $SeriesCopyWith<$Res>? get seriesObject;
+  $SeriesCopyWith<$Res>? get series;
 }
 
 /// @nodoc
@@ -143,20 +147,20 @@ class __$$_ReservationCopyWithImpl<$Res>
   @override
   $Res call({
     Object? email = null,
-    Object? roomId = null,
+    Object? floorDistributionId = null,
     Object? id = freezed,
     Object? startdate = null,
     Object? enddate = null,
-    Object? seriesObject = freezed,
+    Object? series = freezed,
   }) {
     return _then(_$_Reservation(
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      roomId: null == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
+      floorDistributionId: null == floorDistributionId
+          ? _value.floorDistributionId
+          : floorDistributionId // ignore: cast_nullable_to_non_nullable
               as int,
       id: freezed == id
           ? _value.id
@@ -170,9 +174,9 @@ class __$$_ReservationCopyWithImpl<$Res>
           ? _value.enddate
           : enddate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      seriesObject: freezed == seriesObject
-          ? _value.seriesObject
-          : seriesObject // ignore: cast_nullable_to_non_nullable
+      series: freezed == series
+          ? _value.series
+          : series // ignore: cast_nullable_to_non_nullable
               as Series?,
     ));
   }
@@ -183,11 +187,11 @@ class __$$_ReservationCopyWithImpl<$Res>
 class _$_Reservation extends _Reservation {
   _$_Reservation(
       {required this.email,
-      required this.roomId,
+      @JsonKey(name: 'roomId') required this.floorDistributionId,
       this.id,
       required this.startdate,
       required this.enddate,
-      this.seriesObject})
+      @JsonKey(name: 'seriesObject') this.series})
       : super._();
 
   factory _$_Reservation.fromJson(Map<String, dynamic> json) =>
@@ -195,20 +199,24 @@ class _$_Reservation extends _Reservation {
 
   @override
   final String email;
+// ignore: invalid_annotation_target
   @override
-  final int roomId;
+  @JsonKey(name: 'roomId')
+  final int floorDistributionId;
   @override
   final int? id;
   @override
   final DateTime startdate;
   @override
   final DateTime enddate;
+// ignore: invalid_annotation_target
   @override
-  final Series? seriesObject;
+  @JsonKey(name: 'seriesObject')
+  final Series? series;
 
   @override
   String toString() {
-    return 'Reservation(email: $email, roomId: $roomId, id: $id, startdate: $startdate, enddate: $enddate, seriesObject: $seriesObject)';
+    return 'Reservation(email: $email, floorDistributionId: $floorDistributionId, id: $id, startdate: $startdate, enddate: $enddate, series: $series)';
   }
 
   @override
@@ -217,19 +225,19 @@ class _$_Reservation extends _Reservation {
         (other.runtimeType == runtimeType &&
             other is _$_Reservation &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.roomId, roomId) || other.roomId == roomId) &&
+            (identical(other.floorDistributionId, floorDistributionId) ||
+                other.floorDistributionId == floorDistributionId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.startdate, startdate) ||
                 other.startdate == startdate) &&
             (identical(other.enddate, enddate) || other.enddate == enddate) &&
-            (identical(other.seriesObject, seriesObject) ||
-                other.seriesObject == seriesObject));
+            (identical(other.series, series) || other.series == series));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, email, roomId, id, startdate, enddate, seriesObject);
+      runtimeType, email, floorDistributionId, id, startdate, enddate, series);
 
   @JsonKey(ignore: true)
   @override
@@ -248,11 +256,11 @@ class _$_Reservation extends _Reservation {
 abstract class _Reservation extends Reservation {
   factory _Reservation(
       {required final String email,
-      required final int roomId,
+      @JsonKey(name: 'roomId') required final int floorDistributionId,
       final int? id,
       required final DateTime startdate,
       required final DateTime enddate,
-      final Series? seriesObject}) = _$_Reservation;
+      @JsonKey(name: 'seriesObject') final Series? series}) = _$_Reservation;
   _Reservation._() : super._();
 
   factory _Reservation.fromJson(Map<String, dynamic> json) =
@@ -260,16 +268,18 @@ abstract class _Reservation extends Reservation {
 
   @override
   String get email;
-  @override
-  int get roomId;
+  @override // ignore: invalid_annotation_target
+  @JsonKey(name: 'roomId')
+  int get floorDistributionId;
   @override
   int? get id;
   @override
   DateTime get startdate;
   @override
   DateTime get enddate;
-  @override
-  Series? get seriesObject;
+  @override // ignore: invalid_annotation_target
+  @JsonKey(name: 'seriesObject')
+  Series? get series;
   @override
   @JsonKey(ignore: true)
   _$$_ReservationCopyWith<_$_Reservation> get copyWith =>

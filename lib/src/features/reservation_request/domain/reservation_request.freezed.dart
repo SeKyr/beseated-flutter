@@ -20,8 +20,10 @@ ReservationRequest _$ReservationRequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ReservationRequest {
-  String get email => throw _privateConstructorUsedError;
-  int get roomId => throw _privateConstructorUsedError;
+  String get email =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(name: 'roomId')
+  int get floorDistributionId => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
   DateTime get startdate => throw _privateConstructorUsedError;
   DateTime get enddate => throw _privateConstructorUsedError;
@@ -40,7 +42,7 @@ abstract class $ReservationRequestCopyWith<$Res> {
   @useResult
   $Res call(
       {String email,
-      int roomId,
+      @JsonKey(name: 'roomId') int floorDistributionId,
       int? id,
       DateTime startdate,
       DateTime enddate});
@@ -60,7 +62,7 @@ class _$ReservationRequestCopyWithImpl<$Res, $Val extends ReservationRequest>
   @override
   $Res call({
     Object? email = null,
-    Object? roomId = null,
+    Object? floorDistributionId = null,
     Object? id = freezed,
     Object? startdate = null,
     Object? enddate = null,
@@ -70,9 +72,9 @@ class _$ReservationRequestCopyWithImpl<$Res, $Val extends ReservationRequest>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      roomId: null == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
+      floorDistributionId: null == floorDistributionId
+          ? _value.floorDistributionId
+          : floorDistributionId // ignore: cast_nullable_to_non_nullable
               as int,
       id: freezed == id
           ? _value.id
@@ -100,7 +102,7 @@ abstract class _$$_ReservationRequestCopyWith<$Res>
   @useResult
   $Res call(
       {String email,
-      int roomId,
+      @JsonKey(name: 'roomId') int floorDistributionId,
       int? id,
       DateTime startdate,
       DateTime enddate});
@@ -118,7 +120,7 @@ class __$$_ReservationRequestCopyWithImpl<$Res>
   @override
   $Res call({
     Object? email = null,
-    Object? roomId = null,
+    Object? floorDistributionId = null,
     Object? id = freezed,
     Object? startdate = null,
     Object? enddate = null,
@@ -128,9 +130,9 @@ class __$$_ReservationRequestCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      roomId: null == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
+      floorDistributionId: null == floorDistributionId
+          ? _value.floorDistributionId
+          : floorDistributionId // ignore: cast_nullable_to_non_nullable
               as int,
       id: freezed == id
           ? _value.id
@@ -153,7 +155,7 @@ class __$$_ReservationRequestCopyWithImpl<$Res>
 class _$_ReservationRequest extends _ReservationRequest {
   _$_ReservationRequest(
       {required this.email,
-      required this.roomId,
+      @JsonKey(name: 'roomId') required this.floorDistributionId,
       this.id,
       required this.startdate,
       required this.enddate})
@@ -164,8 +166,10 @@ class _$_ReservationRequest extends _ReservationRequest {
 
   @override
   final String email;
+// ignore: invalid_annotation_target
   @override
-  final int roomId;
+  @JsonKey(name: 'roomId')
+  final int floorDistributionId;
   @override
   final int? id;
   @override
@@ -175,7 +179,7 @@ class _$_ReservationRequest extends _ReservationRequest {
 
   @override
   String toString() {
-    return 'ReservationRequest(email: $email, roomId: $roomId, id: $id, startdate: $startdate, enddate: $enddate)';
+    return 'ReservationRequest(email: $email, floorDistributionId: $floorDistributionId, id: $id, startdate: $startdate, enddate: $enddate)';
   }
 
   @override
@@ -184,7 +188,8 @@ class _$_ReservationRequest extends _ReservationRequest {
         (other.runtimeType == runtimeType &&
             other is _$_ReservationRequest &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.roomId, roomId) || other.roomId == roomId) &&
+            (identical(other.floorDistributionId, floorDistributionId) ||
+                other.floorDistributionId == floorDistributionId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.startdate, startdate) ||
                 other.startdate == startdate) &&
@@ -193,8 +198,8 @@ class _$_ReservationRequest extends _ReservationRequest {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, email, roomId, id, startdate, enddate);
+  int get hashCode => Object.hash(
+      runtimeType, email, floorDistributionId, id, startdate, enddate);
 
   @JsonKey(ignore: true)
   @override
@@ -214,7 +219,7 @@ class _$_ReservationRequest extends _ReservationRequest {
 abstract class _ReservationRequest extends ReservationRequest {
   factory _ReservationRequest(
       {required final String email,
-      required final int roomId,
+      @JsonKey(name: 'roomId') required final int floorDistributionId,
       final int? id,
       required final DateTime startdate,
       required final DateTime enddate}) = _$_ReservationRequest;
@@ -225,8 +230,9 @@ abstract class _ReservationRequest extends ReservationRequest {
 
   @override
   String get email;
-  @override
-  int get roomId;
+  @override // ignore: invalid_annotation_target
+  @JsonKey(name: 'roomId')
+  int get floorDistributionId;
   @override
   int? get id;
   @override
