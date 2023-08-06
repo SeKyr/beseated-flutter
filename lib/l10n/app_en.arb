@@ -7,7 +7,7 @@
   "reservationSuccessToast": "Reservation successful",
   "reservationChangeSuccessToast": "Reservation successfully changed",
   "reservationDeletionSuccessToast": "Reservation successfully deleted",
-  "reservationRequestSuccessToast": "Reservation-Request successful",
+  "reservationRequestSuccessToast": "Reservation request successful",
   "reservationRequestCancelationSuccessToast": "Reservation-Request successfully deleted",
   "errorToast": "Something went wrong",
   "settings": "Settings",
@@ -55,5 +55,10 @@
   "reservationRequestAcceptedToast": "Acception successful",
   "reservationRequestRejectedToast": "Rejection successful",
   "youSure": "Are you sure?",
-  "noReservation": "No Reservation"
+  "noReservation": "No Reservation",
+  "delete": "Delete",
+  "deleteReservationIsPartOfSeries": "Should only this reservation or the whole serial be deleted?",
+  "deleteSerial": "Delete Serial",
+  "deleteSingleReservation": "Delete Reservation",
+  "serialDeletionSuccessToast": "Serial successfully deleted"
 }

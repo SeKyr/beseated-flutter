@@ -39,5 +39,10 @@
   "reservationRequestAcceptedToast": "Erfolgreich akzeptiert",
   "reservationRequestRejectedToast": "Erfolgreich abgelehnt",
   "youSure": "Bist du dir sicher?",
-  "noReservation": "Keine Reservierung"
+  "noReservation": "Keine Reservierung",
+  "delete": "Löschen",
+  "deleteReservationIsPartOfSeries": "Soll nur diese Reservierung oder die komplette Serie gelöscht werden?",
+  "deleteSerial": "Serie löschen",
+  "deleteSingleReservation": "Reservierung löschen",
+  "serialDeletionSuccessToast": "Serie erfolgrerich gelöscht"
 }

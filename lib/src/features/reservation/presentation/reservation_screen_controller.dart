@@ -8,6 +8,7 @@ import 'package:beseated/src/features/reservation/presentation/reservation_proce
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
 import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
+import 'package:beseated/src/features/series/application/series_service.dart';
 import 'package:beseated/src/features/settings/domain/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -315,7 +316,11 @@ class ReservationScreenController extends _$ReservationScreenController {
       case ReservationProcessState.foreignReservation:
         break;
       case ReservationProcessState.ownReservation:
-        deleteReservation(reservation!, floorDistribution);
+        if(reservation!.series != null) {
+          _showDeleteDialogSeriesReservation(() => deleteSeries(reservation.series!.id, floorDistribution), () => deleteReservation(reservation, floorDistribution));
+        } else {
+          deleteReservation(reservation, floorDistribution);
+        }
         break;
       case ReservationProcessState.ownReservationRequest:
         cancelReservationRequest(reservationRequest!);
@@ -356,6 +361,24 @@ class ReservationScreenController extends _$ReservationScreenController {
                 .reservationDeletionSuccessToast),
         onError: (_) => AppUtils.showErrorToast());
   }
+
+  void deleteSeries(int seriesId, FloorDistribution floorDistribution) {
+    ref.read(seriesServiceProvider).deleteSeries(id: seriesId)
+        .then(
+            (_) {
+              ref
+                  .read(reservationByFloorDistributionProvider(floorDistribution.id)
+                  .notifier)
+                  .change(null);
+              ref
+                  .read(loggedInUserProvider.notifier)
+                  .deleteReservationAndFloorDistributionByType(floorDistribution.type);
+              AppUtils.showSuccessToast(
+                  AppLocalizations.of(navigatorKey.currentContext!)!
+                      .serialDeletionSuccessToast);
+            }, onError: (_) => AppUtils.showErrorToast());
+  }
+
 
   void _deleteReservationWithCallbacks(Reservation reservation,
       FloorDistribution floorDistribution, Function onValue,
@@ -493,6 +516,44 @@ class ReservationScreenController extends _$ReservationScreenController {
         floorDistributionId: roomId,
         startdate: startdate,
         enddate: enddate);
+  }
+
+  void _showDeleteDialogSeriesReservation(Function() onSeriesDelete, Function() onReservationDelete) {
+    showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                    .delete),
+                const Spacer(),
+                IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close))
+              ],
+            ),
+            content: Text(AppLocalizations.of(navigatorKey.currentContext!)!.deleteReservationIsPartOfSeries),
+            actions: [
+              // The "Yes" button
+              TextButton(
+                  onPressed: () {
+                    onSeriesDelete.call();
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                      .deleteSerial)),
+              TextButton(
+                  onPressed: () {
+                    onReservationDelete.call();
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                      .deleteSingleReservation))
+            ],
+          );
+        });
   }
 }
 
