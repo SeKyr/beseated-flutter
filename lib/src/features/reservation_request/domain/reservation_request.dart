@@ -9,7 +9,7 @@ class ReservationRequest with _$ReservationRequest {
   const ReservationRequest._();
   factory ReservationRequest({
   required String email,
-  required int roomId,
+    @JsonKey(name: 'roomId') required int floorDistributionId,
     int? id,
   required DateTime startdate,
   required DateTime enddate,

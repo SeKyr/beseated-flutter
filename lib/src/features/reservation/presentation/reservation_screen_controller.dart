@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:beseated/src/features/floor_distribution/application/floor_distribution_service.dart';
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
@@ -181,12 +180,12 @@ class ReservationScreenController extends _$ReservationScreenController {
       List<Reservation> reservations, List<ReservationRequest> requests) async {
     for (var reservation in reservations) {
       ref
-          .read(reservationByFloorDistributionProvider(reservation.roomId)
+          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
               .notifier)
           .change(reservation);
     }
 
-    _clearReservationProviders(reservations.map((r) => r.roomId).toSet());
+    _clearReservationProviders(reservations.map((r) => r.floorDistributionId).toSet());
     await _fillOwnReservations(reservations
         .where((reservation) =>
             reservation.email.toLowerCase() ==
@@ -197,11 +196,11 @@ class ReservationScreenController extends _$ReservationScreenController {
 
     for (var request in requests) {
       ref
-          .read(reservationRequestByFloorDistributionProvider(request.roomId)
+          .read(reservationRequestByFloorDistributionProvider(request.floorDistributionId)
               .notifier)
           .change(request);
     }
-    _clearReservationRequestProviders(requests.map((r) => r.roomId).toSet());
+    _clearReservationRequestProviders(requests.map((r) => r.floorDistributionId).toSet());
   }
 
   Future<void> _fillUtilizationWidgetDetailsProvier(List<Reservation> reservations) async {
@@ -210,7 +209,7 @@ class ReservationScreenController extends _$ReservationScreenController {
     for (var reservation in reservations) {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
-          .getFloorDistributionById(id: reservation.roomId);
+          .getFloorDistributionById(id: reservation.floorDistributionId);
       if(floorDistribution.type == FloorDistributionType.table) {
         reservationCountWorkingDesk++;
       } else if(floorDistribution.type == FloorDistributionType.parkingLot) {
@@ -252,7 +251,7 @@ class ReservationScreenController extends _$ReservationScreenController {
     for (var reservation in ownReservations) {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
-          .getFloorDistributionById(id: reservation.roomId);
+          .getFloorDistributionById(id: reservation.floorDistributionId);
       list.add(ReservationAndFloorDistribution(
           reservation: reservation, floorDistribution: floorDistribution));
     }
@@ -366,7 +365,7 @@ class ReservationScreenController extends _$ReservationScreenController {
         .deleteReservation(id: reservation.id!)
         .then((_) {
       ref
-          .read(reservationByFloorDistributionProvider(reservation.roomId)
+          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
               .notifier)
           .change(null);
       ref
@@ -378,17 +377,17 @@ class ReservationScreenController extends _$ReservationScreenController {
 
   void updateReservationFloorDistribution(
       Reservation reservation, FloorDistribution floorDistribution) {
-    var newReservation = reservation.copyWith(roomId: floorDistribution.id);
+    var newReservation = reservation.copyWith(floorDistributionId: floorDistribution.id);
     ref
         .read(reservationServiceProvider)
         .putReservation(reservation: newReservation)
         .then((_) {
       ref
-          .read(reservationByFloorDistributionProvider(reservation.roomId)
+          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
               .notifier)
           .change(null);
       ref
-          .read(reservationByFloorDistributionProvider(newReservation.roomId)
+          .read(reservationByFloorDistributionProvider(newReservation.floorDistributionId)
               .notifier)
           .change(newReservation);
       ref
@@ -437,12 +436,12 @@ class ReservationScreenController extends _$ReservationScreenController {
     ref
         .read(reservationRequestServiceProvider)
         .cancelReservationRequest(
-            floorDistributionId: reservationRequest.roomId,
+            floorDistributionId: reservationRequest.floorDistributionId,
             date: reservationRequest.startdate)
         .then((_) {
       ref
           .read(reservationRequestByFloorDistributionProvider(
-                  reservationRequest.roomId)
+                  reservationRequest.floorDistributionId)
               .notifier)
           .change(null);
       AppUtils.showSuccessToast(
@@ -479,7 +478,7 @@ class ReservationScreenController extends _$ReservationScreenController {
         ref.read(selectedDateProvider).add(const Duration(hours: 20));
     return Reservation(
         email: ref.read(loggedInUserProvider)!.email,
-        roomId: roomId,
+        floorDistributionId: roomId,
         startdate: startdate,
         enddate: enddate);
   }
@@ -491,7 +490,7 @@ class ReservationScreenController extends _$ReservationScreenController {
         ref.read(selectedDateProvider).add(const Duration(hours: 20));
     return ReservationRequest(
         email: ref.read(loggedInUserProvider)!.email,
-        roomId: roomId,
+        floorDistributionId: roomId,
         startdate: startdate,
         enddate: enddate);
   }

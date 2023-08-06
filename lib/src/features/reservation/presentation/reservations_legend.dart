@@ -79,10 +79,10 @@ class ReservationsLegend extends StatelessWidget {
         z: 0);
     var reservation = Reservation(
         email: "max.mustermann@company.domain",
-        roomId: 1,
+        floorDistributionId: 1,
         startdate: DateTime.now(),
         enddate: DateTime.now());
-    var reservationRequest = ReservationRequest(email: "max.mustermann@company.domain", roomId: 1, startdate: DateTime.now(), enddate: DateTime.now());
+    var reservationRequest = ReservationRequest(email: "max.mustermann@company.domain", floorDistributionId: 1, startdate: DateTime.now(), enddate: DateTime.now());
     List<FloorDistributionLegendEntry> list = List.empty(growable: true);
     list.add(FloorDistributionLegendEntry(
         floorDistribution: floorDistribution.copyWith(reservable: false),

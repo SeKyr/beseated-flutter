@@ -47,7 +47,7 @@ class ReservationRequestScreenController extends _$ReservationRequestScreenContr
     for (var reservationRequest in reservationRequests) {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
-          .getFloorDistributionById(id: reservationRequest.roomId);
+          .getFloorDistributionById(id: reservationRequest.floorDistributionId);
       list.add(ReservationRequestWithFloorDistributionName(reservationRequest: reservationRequest, floorDistributionName: floorDistribution.name));
     }
     ref.read(reservationRequestWithFloorDistributionNameProvider.notifier).state = list;

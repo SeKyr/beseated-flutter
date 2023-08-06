@@ -10,7 +10,7 @@ class Reservation with _$Reservation {
   const Reservation._();
   factory Reservation({
   required String email,
-  required int roomId,
+    @JsonKey(name: 'roomId') required int floorDistributionId,
     int? id,
   required DateTime startdate,
   required DateTime enddate,
