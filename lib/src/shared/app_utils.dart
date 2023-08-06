@@ -4,7 +4,6 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:beseated/src/features/authentication/presentation/login_screen.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_screen.dart';
-import 'package:beseated/src/features/reservation/presentation/calendar_screen.dart';
 import 'package:beseated/src/features/reservation_request/presentation/assigned_reservation_requests_badge.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_requests_screen.dart';
 import 'package:beseated/src/features/settings/presentation/settings_screen.dart';
@@ -71,13 +70,6 @@ class AppUtils {
                 parentNavigatorKey: shellKey,
                 pageBuilder: (BuildContext context, GoRouterState state) {
                   return const NoTransitionPage(child: ReservationScreen());
-                },
-              ),
-              GoRoute(
-                path: '/calendar',
-                parentNavigatorKey: shellKey,
-                pageBuilder: (BuildContext context, GoRouterState state) {
-                  return const NoTransitionPage(child: CalendarScreen());
                 },
               ),
               GoRoute(
