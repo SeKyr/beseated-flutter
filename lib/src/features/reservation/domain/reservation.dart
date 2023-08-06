@@ -14,7 +14,7 @@ class Reservation with _$Reservation {
     int? id,
   required DateTime startdate,
   required DateTime enddate,
-    Series? seriesObject,
+    @JsonKey(name: 'seriesObject')Series? series,
   }) = _Reservation;
 
   factory Reservation.fromJson(Map<String, dynamic> json) => _$ReservationFromJson(json);
