@@ -4,36 +4,36 @@ import 'package:beseated/src/features/reservation_request/domain/reservation_req
 import '../../authentication/domain/user.dart';
 import '../domain/reservation.dart';
 
-enum ReservationProcessState {
+enum FloorDistributionReservationState {
   reservable, requestable, foreignReservation, ownReservation, ownReservationRequest, reservableButOwnReservationOnAnother, requestableButOwnReservationOnAnother;
 
-  static ReservationProcessState evaluateState(
+  static FloorDistributionReservationState evaluateState(
       {required FloorDistribution floorDistribution,
       required User user,
       Reservation? reservation,
       ReservationRequest? request}) {
     if (reservation != null) {
       if (reservation.email.toLowerCase() == user.email.toLowerCase()) {
-        return ReservationProcessState.ownReservation;
+        return FloorDistributionReservationState.ownReservation;
       } else {
-        return ReservationProcessState.foreignReservation;
+        return FloorDistributionReservationState.foreignReservation;
       }
     } else if (request != null) {
-      return ReservationProcessState.ownReservationRequest;
+      return FloorDistributionReservationState.ownReservationRequest;
     } else {
       var userReservationByFloorDistributionType =
       user.getReservationByFloorDistributionType(floorDistribution.type);
       if (floorDistribution.owner != null && floorDistribution.owner!.toLowerCase() != user.email.toLowerCase()) {
         if (userReservationByFloorDistributionType == null) {
-          return ReservationProcessState.requestable;
+          return FloorDistributionReservationState.requestable;
         } else {
-          return ReservationProcessState.requestableButOwnReservationOnAnother;
+          return FloorDistributionReservationState.requestableButOwnReservationOnAnother;
         }
       } else {
         if (userReservationByFloorDistributionType == null) {
-          return ReservationProcessState.reservable;
+          return FloorDistributionReservationState.reservable;
         } else {
-          return ReservationProcessState.reservableButOwnReservationOnAnother;
+          return FloorDistributionReservationState.reservableButOwnReservationOnAnother;
         }
       }
     }

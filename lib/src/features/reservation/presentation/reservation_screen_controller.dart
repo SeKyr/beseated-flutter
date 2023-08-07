@@ -294,16 +294,16 @@ class ReservationScreenController extends _$ReservationScreenController {
     final reservationRequest = ref.read(
         reservationRequestByFloorDistributionProvider(floorDistribution.id));
     var user = ref.read(loggedInUserProvider);
-    var reservationProcessState = ReservationProcessState.evaluateState(
+    var reservationProcessState = FloorDistributionReservationState.evaluateState(
         floorDistribution: floorDistribution,
         reservation: reservation,
         request: reservationRequest,
         user: user!);
     switch (reservationProcessState) {
-      case ReservationProcessState.reservable:
+      case FloorDistributionReservationState.reservable:
         reserveFloorDistribution(floorDistribution: floorDistribution);
         break;
-      case ReservationProcessState.requestable:
+      case FloorDistributionReservationState.requestable:
         var content = AppLocalizations.of(navigatorKey.currentContext!)!
 .confirmReservationRequestDescription(
             floorDistribution.type.getLocalizedName(AppLocalizations.of(navigatorKey.currentContext!)!
@@ -313,24 +313,24 @@ class ReservationScreenController extends _$ReservationScreenController {
             () =>
                 requestFloorDistribution(floorDistribution: floorDistribution));
         break;
-      case ReservationProcessState.foreignReservation:
+      case FloorDistributionReservationState.foreignReservation:
         break;
-      case ReservationProcessState.ownReservation:
+      case FloorDistributionReservationState.ownReservation:
         if(reservation!.series != null) {
           _showDeleteDialogSeriesReservation(() => deleteSeries(reservation.series!.id, floorDistribution), () => deleteReservation(reservation, floorDistribution));
         } else {
           deleteReservation(reservation, floorDistribution);
         }
         break;
-      case ReservationProcessState.ownReservationRequest:
+      case FloorDistributionReservationState.ownReservationRequest:
         cancelReservationRequest(reservationRequest!);
         break;
-      case ReservationProcessState.reservableButOwnReservationOnAnother:
+      case FloorDistributionReservationState.reservableButOwnReservationOnAnother:
         updateReservationFloorDistribution(
             user.getReservationByFloorDistributionType(floorDistribution.type)!,
             floorDistribution);
         break;
-      case ReservationProcessState.requestableButOwnReservationOnAnother:
+      case FloorDistributionReservationState.requestableButOwnReservationOnAnother:
         var content =
             AppLocalizations.of(navigatorKey.currentContext!)!
 .confirmReservationRequestDeletsOwnReservationDescription(
