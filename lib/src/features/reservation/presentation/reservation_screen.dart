@@ -80,7 +80,7 @@ class ReservationScreen extends ConsumerWidget {
               },
               onReservableChildDoubleTap: (floorDistribution) => ref
                   .read(reservationScreenControllerProvider.notifier)
-                  .handleFloorDistributionDoubleTap(floorDistribution),
+                  .doFloorDistributionQuickAction(floorDistribution),
             ),
           ),
           floatingActionButton: const FloatingActionButtonColumn(),

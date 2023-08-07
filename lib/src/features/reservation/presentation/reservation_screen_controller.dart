@@ -287,7 +287,7 @@ class ReservationScreenController extends _$ReservationScreenController {
     previouslyFilledReservationProviders.addAll(reservedFloorDistributionIds);
   }
 
-  Future<void> handleFloorDistributionDoubleTap(
+  Future<void> doFloorDistributionQuickAction(
       FloorDistribution floorDistribution) async {
     final reservation =
         ref.read(reservationByFloorDistributionProvider(floorDistribution.id));
@@ -341,6 +341,8 @@ class ReservationScreenController extends _$ReservationScreenController {
         break;
     }
   }
+
+
 
   void _deleteOwnReservationToRequestOther(
       User user, FloorDistribution floorDistribution) {
