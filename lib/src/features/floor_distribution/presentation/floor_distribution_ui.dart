@@ -10,7 +10,6 @@ class FloorDistributionUI extends ConsumerWidget {
       {
         super.key,
         required this.floorDistribution,
-        required this.selected,
         required this.loggedInUserEmail,
         this.reservation,
         this.reservationRequest,
@@ -19,8 +18,6 @@ class FloorDistributionUI extends ConsumerWidget {
       });
 
   final FloorDistribution floorDistribution;
-
-  final bool selected;
 
   final Reservation? reservation;
 
@@ -59,14 +56,14 @@ class FloorDistributionUI extends ConsumerWidget {
       if (reservation != null) {
         bool isOwnReservation = reservation!.email.toLowerCase() == loggedInUserEmail.toLowerCase();
         if(isOwnReservation) {
-          return selected ? Theme.of(context).colorScheme.secondary.withOpacity(0.5) : Theme.of(context).colorScheme.secondary;
+          return Theme.of(context).colorScheme.secondary;
         } else {
-          return selected ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5) : Theme.of(context).colorScheme.primaryContainer;
+          return Theme.of(context).colorScheme.primaryContainer;
         }
       } else if (reservationRequest != null) {
-        return selected ? Theme.of(context).colorScheme.tertiary.withOpacity(0.5) : Theme.of(context).colorScheme.tertiary;
+        return Theme.of(context).colorScheme.tertiary;
       } else {
-        return selected ? Theme.of(context).colorScheme.primary.withOpacity(0.5) : Theme.of(context).colorScheme.primary;
+        return Theme.of(context).colorScheme.primary;
       }
     } else {
       return Theme.of(context).colorScheme.background;

@@ -4,7 +4,6 @@ import 'package:beseated/src/features/authentication/domain/user.dart';
 import 'package:beseated/src/features/authentication/presentation/logged_in_user.dart';
 import 'package:beseated/src/features/floor/presentation/selected_floor.dart';
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
-import 'package:beseated/src/features/floor_distribution/presentation/selected_floor_distribution.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_screen_controller.dart';
 import 'package:beseated/src/features/reservation/presentation/reservations_legend.dart';
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
@@ -74,13 +73,11 @@ class ReservationScreen extends ConsumerWidget {
               floorDistributionsProvider:
               reservationScreenFloorDistributionsProvider,
               onReservableChildTap: (floorDistribution) {
-                ref
-                    .read(selectedFloorDistributionProvider.notifier)
-                    .change(floorDistribution);
+                ref.read(reservationScreenControllerProvider.notifier).showFloorDistributionPopup(floorDistribution);
               },
               onReservableChildDoubleTap: (floorDistribution) => ref
                   .read(reservationScreenControllerProvider.notifier)
-                  .doFloorDistributionQuickAction(floorDistribution),
+                  .doFloorDistributionQuickActionOnValidDate(floorDistribution),
             ),
           ),
           floatingActionButton: const FloatingActionButtonColumn(),

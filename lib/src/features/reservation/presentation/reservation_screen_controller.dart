@@ -4,11 +4,14 @@ import 'package:beseated/src/features/floor_distribution/application/floor_distr
 import 'package:beseated/src/features/floor_distribution/domain/floor_distribution.dart';
 import 'package:beseated/src/features/location/presentation/selected_location.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_by_floor_distibution.dart';
+import 'package:beseated/src/features/reservation/presentation/reservation_dialog.dart';
 import 'package:beseated/src/features/reservation/presentation/reservation_process_state.dart';
 import 'package:beseated/src/features/reservation/presentation/selected_date.dart';
 import 'package:beseated/src/features/reservation_request/application/reservation_request_service.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
 import 'package:beseated/src/features/series/application/series_service.dart';
+import 'package:beseated/src/features/series/domain/create_series_request.dart';
+import 'package:beseated/src/features/series/domain/series_description.dart';
 import 'package:beseated/src/features/settings/domain/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,11 +44,9 @@ final lastTimeReloadedProvider = AutoDisposeStateProvider<AsyncValue<DateTime>>(
     (ref) => const AsyncLoading());
 
 final reservationScreenUtilizationWidgetDetailsProvider =
-AutoDisposeStateProvider<UtilizationWidgetDetails>((ref) {
+    AutoDisposeStateProvider<UtilizationWidgetDetails>((ref) {
   return UtilizationWidgetDetails(workingPlaceActual: 0, parkingLotActual: 0);
 });
-
-
 
 @riverpod
 class ReservationScreenController extends _$ReservationScreenController {
@@ -82,7 +83,7 @@ class ReservationScreenController extends _$ReservationScreenController {
     // Set Timer to reload Data every Minute
     _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
       ref.read(lastTimeReloadedProvider.notifier).state = const AsyncLoading();
-      if(date == ref.read(selectedDateProvider)) {
+      if (date == ref.read(selectedDateProvider)) {
         await _getReservationsAndRequestsAndFillProvider(date);
         ref.read(lastTimeReloadedProvider.notifier).state =
             AsyncData(DateTime.now());
@@ -181,12 +182,14 @@ class ReservationScreenController extends _$ReservationScreenController {
       List<Reservation> reservations, List<ReservationRequest> requests) async {
     for (var reservation in reservations) {
       ref
-          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
+          .read(reservationByFloorDistributionProvider(
+                  reservation.floorDistributionId)
               .notifier)
           .change(reservation);
     }
 
-    _clearReservationProviders(reservations.map((r) => r.floorDistributionId).toSet());
+    _clearReservationProviders(
+        reservations.map((r) => r.floorDistributionId).toSet());
     await _fillOwnReservations(reservations
         .where((reservation) =>
             reservation.email.toLowerCase() ==
@@ -197,27 +200,34 @@ class ReservationScreenController extends _$ReservationScreenController {
 
     for (var request in requests) {
       ref
-          .read(reservationRequestByFloorDistributionProvider(request.floorDistributionId)
+          .read(reservationRequestByFloorDistributionProvider(
+                  request.floorDistributionId)
               .notifier)
           .change(request);
     }
-    _clearReservationRequestProviders(requests.map((r) => r.floorDistributionId).toSet());
+    _clearReservationRequestProviders(
+        requests.map((r) => r.floorDistributionId).toSet());
   }
 
-  Future<void> _fillUtilizationWidgetDetailsProvier(List<Reservation> reservations) async {
+  Future<void> _fillUtilizationWidgetDetailsProvier(
+      List<Reservation> reservations) async {
     int reservationCountWorkingDesk = 0;
     int reservationCountParkingLot = 0;
     for (var reservation in reservations) {
       var floorDistribution = await ref
           .read(floorDistributionServiceProvider)
           .getFloorDistributionById(id: reservation.floorDistributionId);
-      if(floorDistribution.type == FloorDistributionType.table) {
+      if (floorDistribution.type == FloorDistributionType.table) {
         reservationCountWorkingDesk++;
-      } else if(floorDistribution.type == FloorDistributionType.parkingLot) {
+      } else if (floorDistribution.type == FloorDistributionType.parkingLot) {
         reservationCountParkingLot++;
       }
     }
-    var utilizationWidgetDetails = UtilizationWidgetDetails(workingPlaceActual: reservationCountWorkingDesk, parkingLotActual: reservationCountParkingLot, parkingLotMax: int.tryParse(settings[Settings.maxParking] ?? ""), workingPlaceMax: int.tryParse(settings[Settings.maxPeople] ?? ""));
+    var utilizationWidgetDetails = UtilizationWidgetDetails(
+        workingPlaceActual: reservationCountWorkingDesk,
+        parkingLotActual: reservationCountParkingLot,
+        parkingLotMax: int.tryParse(settings[Settings.maxParking] ?? ""),
+        workingPlaceMax: int.tryParse(settings[Settings.maxPeople] ?? ""));
     var firstBorder = double.tryParse(settings[Settings.firstBorder] ?? "");
     var secondBorder = double.tryParse(settings[Settings.secondBorder] ?? "");
     if (firstBorder != null) {
@@ -226,7 +236,8 @@ class ReservationScreenController extends _$ReservationScreenController {
     if (secondBorder != null) {
       utilizationWidgetDetails.secondBorder = secondBorder;
     }
-    ref.read(reservationScreenUtilizationWidgetDetailsProvider.notifier).state = utilizationWidgetDetails;
+    ref.read(reservationScreenUtilizationWidgetDetailsProvider.notifier).state =
+        utilizationWidgetDetails;
   }
 
   Future<void>
@@ -287,6 +298,14 @@ class ReservationScreenController extends _$ReservationScreenController {
     previouslyFilledReservationProviders.addAll(reservedFloorDistributionIds);
   }
 
+  Future<void> doFloorDistributionQuickActionOnValidDate(FloorDistribution floorDistribution) async {
+    var today = DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+    var selectedDate = ref.read(selectedDateProvider).copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+    if(!selectedDate.isBefore(today)) {
+      await doFloorDistributionQuickAction(floorDistribution);
+    }
+  }
+
   Future<void> doFloorDistributionQuickAction(
       FloorDistribution floorDistribution) async {
     final reservation =
@@ -294,20 +313,21 @@ class ReservationScreenController extends _$ReservationScreenController {
     final reservationRequest = ref.read(
         reservationRequestByFloorDistributionProvider(floorDistribution.id));
     var user = ref.read(loggedInUserProvider);
-    var reservationProcessState = FloorDistributionReservationState.evaluateState(
-        floorDistribution: floorDistribution,
-        reservation: reservation,
-        request: reservationRequest,
-        user: user!);
+    var reservationProcessState =
+        FloorDistributionReservationState.evaluateState(
+            floorDistribution: floorDistribution,
+            reservation: reservation,
+            request: reservationRequest,
+            user: user!);
     switch (reservationProcessState) {
       case FloorDistributionReservationState.reservable:
         reserveFloorDistribution(floorDistribution: floorDistribution);
         break;
       case FloorDistributionReservationState.requestable:
         var content = AppLocalizations.of(navigatorKey.currentContext!)!
-.confirmReservationRequestDescription(
-            floorDistribution.type.getLocalizedName(AppLocalizations.of(navigatorKey.currentContext!)!
-));
+            .confirmReservationRequestDescription(floorDistribution.type
+                .getLocalizedName(
+                    AppLocalizations.of(navigatorKey.currentContext!)!));
         AppUtils.showConfirmDialog(
             content,
             () =>
@@ -316,8 +336,10 @@ class ReservationScreenController extends _$ReservationScreenController {
       case FloorDistributionReservationState.foreignReservation:
         break;
       case FloorDistributionReservationState.ownReservation:
-        if(reservation!.series != null) {
-          _showDeleteDialogSeriesReservation(() => deleteSeries(reservation.series!.id, floorDistribution), () => deleteReservation(reservation, floorDistribution));
+        if (reservation!.series != null) {
+          _showDeleteDialogSeriesReservation(
+              () => deleteSeries(reservation.series!.id, floorDistribution),
+              () => deleteReservation(reservation, floorDistribution));
         } else {
           deleteReservation(reservation, floorDistribution);
         }
@@ -325,31 +347,93 @@ class ReservationScreenController extends _$ReservationScreenController {
       case FloorDistributionReservationState.ownReservationRequest:
         cancelReservationRequest(reservationRequest!);
         break;
-      case FloorDistributionReservationState.reservableButOwnReservationOnAnother:
-        updateReservationFloorDistribution(
-            user.getReservationByFloorDistributionType(floorDistribution.type)!,
+      case FloorDistributionReservationState
+            .reservableButOwnReservationOnAnother:
+        var oldReservation =
+            user.getReservationByFloorDistributionType(floorDistribution.type)!;
+        updateReservation(
+            oldReservation,
+            oldReservation.copyWith(floorDistributionId: floorDistribution.id),
             floorDistribution);
         break;
-      case FloorDistributionReservationState.requestableButOwnReservationOnAnother:
-        var content =
-            AppLocalizations.of(navigatorKey.currentContext!)!
-.confirmReservationRequestDeletsOwnReservationDescription(
-                floorDistribution.type.getLocalizedName(AppLocalizations.of(navigatorKey.currentContext!)!
-));
+      case FloorDistributionReservationState
+            .requestableButOwnReservationOnAnother:
+        var content = AppLocalizations.of(navigatorKey.currentContext!)!
+            .confirmReservationRequestDeletsOwnReservationDescription(
+                floorDistribution.type.getLocalizedName(
+                    AppLocalizations.of(navigatorKey.currentContext!)!));
         AppUtils.showConfirmDialog(content,
-            () => _deleteOwnReservationToRequestOther(user, floorDistribution));
+            () => deleteOwnReservationToRequestOther(user, floorDistribution));
         break;
     }
   }
 
+  void showFloorDistributionPopup(FloorDistribution floorDistribution) {
+    showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (context) {
+          final reservation = ref.read(
+              reservationByFloorDistributionProvider(floorDistribution.id));
+          final reservationRequest = ref.read(
+              reservationRequestByFloorDistributionProvider(
+                  floorDistribution.id));
+          var user = ref.read(loggedInUserProvider);
+          return ReservationDialog(
+            floorDistribution: floorDistribution,
+            user: user!,
+            reservation: reservation,
+            reservationRequest: reservationRequest,
+          );
+        });
+  }
 
+  void createSeries(
+      {required Reservation reservation,
+      required SeriesDescription seriesDescription,
+      required FloorDistribution floorDistribution}) {
+    if (seriesDescription.type == SeriesType.never) {
+      throw ArgumentError(
+          'seriesDescription.type may not be never', 'seriesDescription');
+    } else if (seriesDescription.type == SeriesType.weekly &&
+        seriesDescription.weekdays.isEmpty) {
+      throw ArgumentError(
+          'seriesDescription.weekdays may not be empty for seriesDescription.type weekly',
+          'seriesDescription');
+    }
+    ref.read(seriesServiceProvider).postSeries(
+        createSeriesRequest: CreateSeriesRequest(
+            startDate: reservation.startdate,
+            endDate: seriesDescription.until.copyWith(
+                hour: reservation.enddate.hour,
+                minute: reservation.enddate.minute),
+            floorDistributionId: floorDistribution.id,
+            email: reservation.email,
+            cronPattern: seriesDescription.cronPattern))
+        .then((notPossibleReservations) async {
+          var appLocalization = AppLocalizations.of(navigatorKey.currentContext!)!;
+          if (notPossibleReservations.isNotEmpty) {
+            var notPossibleDatesFormatted = notPossibleReservations.map((r) => r.startdate.toLocalDateString(navigatorKey.currentContext!));
+            var text = '${appLocalization.serialNotPossibleReservations}:\n${notPossibleDatesFormatted.join('\n')}';
+            AppUtils.showInfoDialog(text, () => AppUtils.showSuccessToast(appLocalization.serialCreationSuccessToast));
+          } else {
+            AppUtils.showSuccessToast(appLocalization.serialCreationSuccessToast);
+          }
+          await _getReservationsAndRequestsAndFillProvider(ref.read(selectedDateProvider));
+    }, 
+        onError: (_) => AppUtils.showErrorToast());
+  }
 
-  void _deleteOwnReservationToRequestOther(
-      User user, FloorDistribution floorDistribution) {
+  void deleteOwnReservationToRequestOther(
+      User user, FloorDistribution floorDistribution,
+      {ReservationRequest? reservationRequest}) {
     var ownReservationToDelete =
         user.getReservationByFloorDistributionType(floorDistribution.type)!;
-    _deleteReservationWithCallbacks(ownReservationToDelete, floorDistribution,
-        () => requestFloorDistribution(floorDistribution: floorDistribution),
+    _deleteReservationWithCallbacks(
+        ownReservationToDelete,
+        floorDistribution,
+        () => requestFloorDistribution(
+            floorDistribution: floorDistribution,
+            reservationRequest: reservationRequest),
         onError: (_) => AppUtils.showErrorToast());
   }
 
@@ -365,22 +449,19 @@ class ReservationScreenController extends _$ReservationScreenController {
   }
 
   void deleteSeries(int seriesId, FloorDistribution floorDistribution) {
-    ref.read(seriesServiceProvider).deleteSeries(id: seriesId)
-        .then(
-            (_) {
-              ref
-                  .read(reservationByFloorDistributionProvider(floorDistribution.id)
-                  .notifier)
-                  .change(null);
-              ref
-                  .read(loggedInUserProvider.notifier)
-                  .deleteReservationAndFloorDistributionByType(floorDistribution.type);
-              AppUtils.showSuccessToast(
-                  AppLocalizations.of(navigatorKey.currentContext!)!
-                      .serialDeletionSuccessToast);
-            }, onError: (_) => AppUtils.showErrorToast());
+    ref.read(seriesServiceProvider).deleteSeries(id: seriesId).then((_) {
+      ref
+          .read(reservationByFloorDistributionProvider(floorDistribution.id)
+              .notifier)
+          .change(null);
+      ref
+          .read(loggedInUserProvider.notifier)
+          .deleteReservationAndFloorDistributionByType(floorDistribution.type);
+      AppUtils.showSuccessToast(
+          AppLocalizations.of(navigatorKey.currentContext!)!
+              .serialDeletionSuccessToast);
+    }, onError: (_) => AppUtils.showErrorToast());
   }
-
 
   void _deleteReservationWithCallbacks(Reservation reservation,
       FloorDistribution floorDistribution, Function onValue,
@@ -390,7 +471,8 @@ class ReservationScreenController extends _$ReservationScreenController {
         .deleteReservation(id: reservation.id!)
         .then((_) {
       ref
-          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
+          .read(reservationByFloorDistributionProvider(
+                  reservation.floorDistributionId)
               .notifier)
           .change(null);
       ref
@@ -400,19 +482,23 @@ class ReservationScreenController extends _$ReservationScreenController {
     }, onError: (_) => onError?.call());
   }
 
-  void updateReservationFloorDistribution(
-      Reservation reservation, FloorDistribution floorDistribution) {
-    var newReservation = reservation.copyWith(floorDistributionId: floorDistribution.id);
+  void updateReservation(Reservation oldReservation, Reservation newReservation,
+      FloorDistribution floorDistribution) {
     ref
         .read(reservationServiceProvider)
         .putReservation(reservation: newReservation)
         .then((_) {
+      if (oldReservation.floorDistributionId !=
+          newReservation.floorDistributionId) {
+        ref
+            .read(reservationByFloorDistributionProvider(
+                    oldReservation.floorDistributionId)
+                .notifier)
+            .change(null);
+      }
       ref
-          .read(reservationByFloorDistributionProvider(reservation.floorDistributionId)
-              .notifier)
-          .change(null);
-      ref
-          .read(reservationByFloorDistributionProvider(newReservation.floorDistributionId)
+          .read(reservationByFloorDistributionProvider(
+                  newReservation.floorDistributionId)
               .notifier)
           .change(newReservation);
       ref
@@ -520,7 +606,8 @@ class ReservationScreenController extends _$ReservationScreenController {
         enddate: enddate);
   }
 
-  void _showDeleteDialogSeriesReservation(Function() onSeriesDelete, Function() onReservationDelete) {
+  void _showDeleteDialogSeriesReservation(
+      Function() onSeriesDelete, Function() onReservationDelete) {
     showDialog(
         context: navigatorKey.currentContext!,
         builder: (BuildContext context) {
@@ -528,13 +615,15 @@ class ReservationScreenController extends _$ReservationScreenController {
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(AppLocalizations.of(navigatorKey.currentContext!)!
-                    .delete),
+                Text(AppLocalizations.of(navigatorKey.currentContext!)!.delete),
                 const Spacer(),
-                IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close))
+                IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close))
               ],
             ),
-            content: Text(AppLocalizations.of(navigatorKey.currentContext!)!.deleteReservationIsPartOfSeries),
+            content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                .deleteReservationIsPartOfSeries),
             actions: [
               // The "Yes" button
               TextButton(
@@ -560,7 +649,6 @@ class ReservationScreenController extends _$ReservationScreenController {
 }
 
 class UtilizationWidgetDetails {
-
   UtilizationWidgetDetails({
     this.workingPlaceMax,
     required this.workingPlaceActual,

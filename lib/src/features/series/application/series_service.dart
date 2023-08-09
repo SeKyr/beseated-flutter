@@ -12,7 +12,7 @@ class SeriesService {
 
   final SeriesRepository seriesRepository;
 
-  Future<List<Reservation>> postReservation({required CreateSeriesRequest createSeriesRequest}) {
+  Future<List<Reservation>> postSeries({required CreateSeriesRequest createSeriesRequest}) {
     return seriesRepository.postSeries(createSeriesRequest: createSeriesRequest);
   }
 

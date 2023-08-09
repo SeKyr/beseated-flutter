@@ -25,7 +25,7 @@ final shellKey = GlobalKey<NavigatorState>();
 class AppUtils {
   static String get beSeatedApiUrl {
     const url = String.fromEnvironment('BESEATED_API_URL',
-        defaultValue: 'https://beseated.com-software.de/BeSeated/api');
+        defaultValue: 'https://beseated.k8s.com-software.com/BeSeated/api');
     return url;
   }
 
@@ -148,6 +148,28 @@ class AppUtils {
                   },
                   child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
 .noLarge))
+            ],
+          );
+        });
+  }
+
+  static void showInfoDialog(String content, Function() onOk) {
+    showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                .info),
+            content: Text(content),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                    onOk.call();
+                  },
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                      .ok))
             ],
           );
         });

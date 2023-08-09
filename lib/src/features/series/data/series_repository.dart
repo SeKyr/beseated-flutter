@@ -19,7 +19,8 @@ class SeriesRepository {
   Future<List<Reservation>> postSeries({required CreateSeriesRequest createSeriesRequest}) async {
     final response = await client.post('$_baseEndpointUrl/createSeries', body: createSeriesRequest.toJson(), bodyIsJson: true);
     final data = AppUtils.decodeJson(response.body);
-    return data['invalidReservations'].map((f) => Reservation.fromJson(f)).toList();
+    final list = data['invalidReservations'] as List;
+    return list.map((f) => Reservation.fromJson(f)).toList();
   }
 
   Future deleteSeries({required int id}) {

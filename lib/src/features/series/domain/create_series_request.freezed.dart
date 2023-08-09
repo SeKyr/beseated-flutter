@@ -20,8 +20,8 @@ CreateSeriesRequest _$CreateSeriesRequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CreateSeriesRequest {
-  DateTime get startdate => throw _privateConstructorUsedError;
-  DateTime get enddate =>
+  DateTime get startDate => throw _privateConstructorUsedError;
+  DateTime get endDate =>
       throw _privateConstructorUsedError; // ignore: invalid_annotation_target
   @JsonKey(name: 'roomId')
   int get floorDistributionId => throw _privateConstructorUsedError;
@@ -41,8 +41,8 @@ abstract class $CreateSeriesRequestCopyWith<$Res> {
       _$CreateSeriesRequestCopyWithImpl<$Res, CreateSeriesRequest>;
   @useResult
   $Res call(
-      {DateTime startdate,
-      DateTime enddate,
+      {DateTime startDate,
+      DateTime endDate,
       @JsonKey(name: 'roomId') int floorDistributionId,
       String email,
       String cronPattern});
@@ -61,20 +61,20 @@ class _$CreateSeriesRequestCopyWithImpl<$Res, $Val extends CreateSeriesRequest>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startdate = null,
-    Object? enddate = null,
+    Object? startDate = null,
+    Object? endDate = null,
     Object? floorDistributionId = null,
     Object? email = null,
     Object? cronPattern = null,
   }) {
     return _then(_value.copyWith(
-      startdate: null == startdate
-          ? _value.startdate
-          : startdate // ignore: cast_nullable_to_non_nullable
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      enddate: null == enddate
-          ? _value.enddate
-          : enddate // ignore: cast_nullable_to_non_nullable
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
       floorDistributionId: null == floorDistributionId
           ? _value.floorDistributionId
@@ -101,8 +101,8 @@ abstract class _$$_CreateSeriesRequestCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime startdate,
-      DateTime enddate,
+      {DateTime startDate,
+      DateTime endDate,
       @JsonKey(name: 'roomId') int floorDistributionId,
       String email,
       String cronPattern});
@@ -119,20 +119,20 @@ class __$$_CreateSeriesRequestCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startdate = null,
-    Object? enddate = null,
+    Object? startDate = null,
+    Object? endDate = null,
     Object? floorDistributionId = null,
     Object? email = null,
     Object? cronPattern = null,
   }) {
     return _then(_$_CreateSeriesRequest(
-      startdate: null == startdate
-          ? _value.startdate
-          : startdate // ignore: cast_nullable_to_non_nullable
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      enddate: null == enddate
-          ? _value.enddate
-          : enddate // ignore: cast_nullable_to_non_nullable
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
       floorDistributionId: null == floorDistributionId
           ? _value.floorDistributionId
@@ -154,8 +154,8 @@ class __$$_CreateSeriesRequestCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CreateSeriesRequest implements _CreateSeriesRequest {
   _$_CreateSeriesRequest(
-      {required this.startdate,
-      required this.enddate,
+      {required this.startDate,
+      required this.endDate,
       @JsonKey(name: 'roomId') required this.floorDistributionId,
       required this.email,
       required this.cronPattern});
@@ -164,9 +164,9 @@ class _$_CreateSeriesRequest implements _CreateSeriesRequest {
       _$$_CreateSeriesRequestFromJson(json);
 
   @override
-  final DateTime startdate;
+  final DateTime startDate;
   @override
-  final DateTime enddate;
+  final DateTime endDate;
 // ignore: invalid_annotation_target
   @override
   @JsonKey(name: 'roomId')
@@ -178,7 +178,7 @@ class _$_CreateSeriesRequest implements _CreateSeriesRequest {
 
   @override
   String toString() {
-    return 'CreateSeriesRequest(startdate: $startdate, enddate: $enddate, floorDistributionId: $floorDistributionId, email: $email, cronPattern: $cronPattern)';
+    return 'CreateSeriesRequest(startDate: $startDate, endDate: $endDate, floorDistributionId: $floorDistributionId, email: $email, cronPattern: $cronPattern)';
   }
 
   @override
@@ -186,9 +186,9 @@ class _$_CreateSeriesRequest implements _CreateSeriesRequest {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_CreateSeriesRequest &&
-            (identical(other.startdate, startdate) ||
-                other.startdate == startdate) &&
-            (identical(other.enddate, enddate) || other.enddate == enddate) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.floorDistributionId, floorDistributionId) ||
                 other.floorDistributionId == floorDistributionId) &&
             (identical(other.email, email) || other.email == email) &&
@@ -199,7 +199,7 @@ class _$_CreateSeriesRequest implements _CreateSeriesRequest {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, startdate, enddate, floorDistributionId, email, cronPattern);
+      runtimeType, startDate, endDate, floorDistributionId, email, cronPattern);
 
   @JsonKey(ignore: true)
   @override
@@ -218,8 +218,8 @@ class _$_CreateSeriesRequest implements _CreateSeriesRequest {
 
 abstract class _CreateSeriesRequest implements CreateSeriesRequest {
   factory _CreateSeriesRequest(
-      {required final DateTime startdate,
-      required final DateTime enddate,
+      {required final DateTime startDate,
+      required final DateTime endDate,
       @JsonKey(name: 'roomId') required final int floorDistributionId,
       required final String email,
       required final String cronPattern}) = _$_CreateSeriesRequest;
@@ -228,9 +228,9 @@ abstract class _CreateSeriesRequest implements CreateSeriesRequest {
       _$_CreateSeriesRequest.fromJson;
 
   @override
-  DateTime get startdate;
+  DateTime get startDate;
   @override
-  DateTime get enddate;
+  DateTime get endDate;
   @override // ignore: invalid_annotation_target
   @JsonKey(name: 'roomId')
   int get floorDistributionId;

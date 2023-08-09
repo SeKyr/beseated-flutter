@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:beseated/src/features/floor_distribution/presentation/floor_distribution_ui.dart';
 import 'package:beseated/src/features/reservation_request/presentation/reservation_request_by_floor_distibution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../authentication/presentation/logged_in_user.dart';
 import '../../reservation/presentation/reservation_by_floor_distibution.dart';
 import '../domain/floor_distribution.dart';
-import 'floor_distribution_selected.dart';
 import 'providable_floor_distribution_ui.dart';
 
 typedef OnChildInteractionCallback = Function(
@@ -69,7 +67,6 @@ class FloorDistributionMap extends ConsumerWidget {
     return floorDistributions
         .map((floorDistribution) => ProvidableFloorDistributionUI(
             floorDistribution: floorDistribution,
-            selectedProvider: floorDistributionSelectedProvider(floorDistribution.id),
             reservationProvider: reservationByFloorDistributionProvider(floorDistribution.id),
             reservationRequestProvider: reservationRequestByFloorDistributionProvider(floorDistribution.id),
             loggedInUserProvider: loggedInUserProvider,

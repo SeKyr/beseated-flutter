@@ -121,7 +121,6 @@ class ReservationsLegend extends StatelessWidget {
         Stack(children: [
           FloorDistributionUI(
             floorDistribution: entry.floorDistribution,
-            selected: false,
             loggedInUserEmail: entry.userEmail,
             reservation: entry.reservation,
             reservationRequest: entry.reservationRequest,

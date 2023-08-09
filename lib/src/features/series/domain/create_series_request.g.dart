@@ -9,8 +9,8 @@ part of 'create_series_request.dart';
 _$_CreateSeriesRequest _$$_CreateSeriesRequestFromJson(
         Map<String, dynamic> json) =>
     _$_CreateSeriesRequest(
-      startdate: DateTime.parse(json['startdate'] as String),
-      enddate: DateTime.parse(json['enddate'] as String),
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
       floorDistributionId: json['roomId'] as int,
       email: json['email'] as String,
       cronPattern: json['cronPattern'] as String,
@@ -19,8 +19,8 @@ _$_CreateSeriesRequest _$$_CreateSeriesRequestFromJson(
 Map<String, dynamic> _$$_CreateSeriesRequestToJson(
         _$_CreateSeriesRequest instance) =>
     <String, dynamic>{
-      'startdate': instance.startdate.toIso8601String(),
-      'enddate': instance.enddate.toIso8601String(),
+      'startDate': instance.startDate.toIso8601String(),
+      'endDate': instance.endDate.toIso8601String(),
       'roomId': instance.floorDistributionId,
       'email': instance.email,
       'cronPattern': instance.cronPattern,

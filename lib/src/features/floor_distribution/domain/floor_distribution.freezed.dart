@@ -255,7 +255,7 @@ class __$$_FloorDistributionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FloorDistribution implements _FloorDistribution {
+class _$_FloorDistribution extends _FloorDistribution {
   _$_FloorDistribution(
       {required this.id,
       required this.name,
@@ -269,7 +269,8 @@ class _$_FloorDistribution implements _FloorDistribution {
       required this.x,
       required this.y,
       required this.z,
-      this.owner});
+      this.owner})
+      : super._();
 
   factory _$_FloorDistribution.fromJson(Map<String, dynamic> json) =>
       _$$_FloorDistributionFromJson(json);
@@ -349,7 +350,7 @@ class _$_FloorDistribution implements _FloorDistribution {
   }
 }
 
-abstract class _FloorDistribution implements FloorDistribution {
+abstract class _FloorDistribution extends FloorDistribution {
   factory _FloorDistribution(
       {required final int id,
       required final String name,
@@ -364,6 +365,7 @@ abstract class _FloorDistribution implements FloorDistribution {
       required final int y,
       required final int z,
       final String? owner}) = _$_FloorDistribution;
+  _FloorDistribution._() : super._();
 
   factory _FloorDistribution.fromJson(Map<String, dynamic> json) =
       _$_FloorDistribution.fromJson;

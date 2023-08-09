@@ -6,8 +6,8 @@ part 'create_series_request.g.dart';
 @freezed
 class CreateSeriesRequest with _$CreateSeriesRequest {
   factory CreateSeriesRequest({
-    required DateTime startdate,
-    required DateTime enddate,
+    required DateTime startDate,
+    required DateTime endDate,
     // ignore: invalid_annotation_target
     @JsonKey(name: 'roomId') required int floorDistributionId,
     required String email,
